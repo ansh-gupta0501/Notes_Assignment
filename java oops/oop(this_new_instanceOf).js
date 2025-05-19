@@ -132,3 +132,23 @@ const userOne = new user3('ansh',12,true)
 
 console.log("userone is ",userOne.constructor) // output:- userone is [Funtion: user3]
 // so constructor property is nothing but just reference to your function 
+
+//instance of operator 
+
+// The instanceof operator in JavaScript checks if an object is an instance of a specific class or constructor function. It returns a boolean value, true if the object belongs to the specified type or false otherwise. It is used to determine the type of an object during runtime, which is particularly useful when working with inheritance and polymorphism
+
+// syntax :- object instanceof constructor
+
+
+class Animal{}
+class wildAnimal{}
+const dog = new Animal()
+const tiger = new wildAnimal()
+
+console.log(dog instanceof Animal)
+console.log(dog instanceof wildAnimal )
+console.log(tiger instanceof wildAnimal)
+console.log(tiger instanceof Animal)
+
+
+
