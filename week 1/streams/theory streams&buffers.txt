@@ -1,0 +1,88 @@
+//streams :- they are abstract interfaces used to work with streaming data 
+
+suppose you have a text file in which you have text content and suppose file is about 50mb. 
+now in express server , you want that on / route you have to send this file content after reading using fs module to user.
+
+
+const fs = require('fs')
+
+const app = express()
+
+app.get("/",(req,res)=>{
+    fs.readFile("./sample.txt",(err,data)=>{
+        res.end(data);
+    });
+});
+
+// we have package express-status-monitor while tells us about memory consumption and cpu utilization of express server
+
+const status = require('express-status-monitor')
+app.use(status())
+
+if we see , when data loads , the memory suddenly increases because , 
+
+in our code , we read the file and store the data to our data variable and then send this data to the server . means data first loads in our memory . means it was to be stored in RAM first while reading data from file which is not good 
+
+// to solve this problem , we have streams
+
+streaming means as data coming , it becomes available , means it does not wait for full data to load in buffer , 
+
+so we say fs not to read file , stream it . means read data chunks by chunks and simultaneously send data to brower , means it does not store anything on the memory . This is called pipeline 
+
+app.get("/",(req,res)=>{
+   const stream = fs.createReadStread("./sample.txt","utf-8")
+   //when data comes on stream , we get a chunk  and we res.write this chunk. we are not holding the data with us  
+   
+   stream.on('data',(chunk)=>res)
+   //when this stream end means file is complete then we end the response 
+
+   stream.on('end',()=>res.end())
+
+})
+
+now we do this type of thing , express set a header automatically which is Transfer-Encoding : chunked  which means we are telling browser that you will get data in chunks
+
+  
+-------------------------------------------
+another example 
+
+if we want to zip a file , then first approach is we read a 400mb file then create a zip file of 400 mb and then store the file data in this zip file which is more memory consumption so instead of doing this we use streams
+
+there is zlip library in node js which zip the file 
+
+// stream read(sample.txt) -> zipper -> fs write stream 
+
+fs.createReadStream("./sample.txt").pipe(zlib.createGzip().pipe(fs.createWriteStream("./sample.zip")))
+
+we are reading a file side by side we are zipping it using zlib createGzip function and the side by side we are writing it in sample.zip 
+
+
+------------------------------------------------
+
+Types of streams 
+
+-Readable streams 
+Used for reading data 
+Examples include fs.createReadStream() to read files , http.IncomingMessage for HTTP requests, and process.stdin for reading input from the console .
+
+-Writable streams
+Used for writing data 
+Examples include fs.createWriteStream() to write files, http.ServerResponse for HTTP responses, and process.stdout for writing output to the console. 
+
+-Duplex Streams
+Streams that are both readable and writable
+Examples include network sockets(net Socket)(listening messages and forwading those messages ), zlib streams for compression/decompression, and crypto streams.
+
+-Transform Streams(special type of Duplex stream)
+A special type of Duplex stream where the output is a transformed version of the input. 
+Examples include zlib.createGzip() for compressing data, crypto.createCipher() for encryption, and other stream manipulation tasks.
+
+Streams are used for Efficiency , Scalability , I/O Handling , Real-Time Data   
+
+
+
+
+
+
+
+

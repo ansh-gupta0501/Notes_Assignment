@@ -1,0 +1,300 @@
+Synchronous vs Asynchronous :-
+
+synchronous is like just fire the code but asynchronous is like waiting for the other task to complete and goes forward. 
+
+in javascript , mainly we work with asynchronous code like:-
+- asking for user input 
+- calling an api
+- reading and writing files to the filesystem 
+- uploading and downloading files 
+- interacting with a database 
+- interacting with an external service
+
+now there are 3 primary ways to do asynchronous code with javascript :-
+- callbacks
+- promises
+- async/await
+
+
+callback approach:-
+
+we create a function that we want to be called when the file has been written. we can assign this function to a variable using function expression 
+
+import fs from 'node:fs';
+
+const fileWriteCompleted = () =>{
+console.log("file written ");
+};
+
+
+now we need to specify a file that we want to write to , and then we can pass in the data we want to write. we can pass this function in as the third parameter  
+
+// writing data to the file 
+const data = JSON.stringify({})
+fs.writeFile("./data.json",data,fileWriteCompleted);
+this function will be executed once the file is written .
+if the function successfuly executed means the file is written 
+
+this is callbacks but there are some difficulties with callbacks especially when you need to perform multiple asynchronous tasks in a row .
+
+fs.writeFile("./file1.json",data,()=>{
+console.log("file written");
+fs.writeFile("./file2.json",data,()=>{
+console.log("file 2 written");
+fs.writeFile("./file3.json",data,()=>{tea
+console.log("file 3 written");
+fs.writeFile("./file4.json",data,()=>{
+console.log("file 4 written ");
+}
+}
+}
+}); 
+
+so , we quickly end up with call back hell or the pyramid of doom . the code becomes less readable and it can be very difficult to determine where errors are happening with these asynchronous tasks. 
+
+
+Promise
+
+The Promise object represents the eventual completion (or failure) of an asynchronous operation and its resulting value . 
+
+when working with promises , you can write logic that gets executed when the promise is fulfilled or rejected . now rejection would happen if there is an error during asynchronous execution .
+
+now if looks similar to callbacks but one of the advantage of promise is that you can chain promises together 
+
+// importing node filesystem module for promises
+import fs from 'node:fs/promises';
+
+now we can specify the logic that gets executed in the then method of promises
+//writing  the data to the file 
+const data = JSON.stringify({})
+fs.writeFile("./file1.json",data)
+.then(()=>{
+return fs.writeFile("./file2.json",data);
+})
+.then(()=>{
+return fs.writeFile("./file3.json",data)
+})
+
+now we can chain these together as long as we are returning the promises
+
+now third option which has now become default in modern javascript , that is async/await
+this is not different approach , it actually uses promises behind the scenes 
+, it is just a different syntax for working with promises and it is bit closer to how to work with synchronous code 
+
+//using promises without async / await 
+fs.writeFile("./file1.json",data)
+.then(()=>{
+ console.log("file written ");
+})
+
+//using async /await 
+await fs.writeFile("./file1.json",data)
+console.log("file written ")
+
+the await keyword wait for the promises to resolve and then proceeds to the next line of code . 
+if mulitple files
+await fs.writeFile("./file1.json",data)
+await fs.writeFile("./file2.json",data)
+await fs.writeFile("./file3.json",data)
+await fs.writeFile("./file4.json",data)
+console.log("file written ")
+
+now these await statements generally needs to exist withing a function that is designated as async function , so this means function returns a promises 
+
+//function marked as async 
+async function writeFiles() {
+	await fs.writeFile("./file1.json",data)
+	await fs.writeFile("./file2.json",data)
+	await fs.writeFile("./file3.json",data)
+	await fs.writeFile("./file4.json",data)
+}
+
+//execute async function 
+writeFiles().then(()=>console.log("file written "))
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+error handling :- 
+handling error using two ways :- try/catch and handling errors with promises
+
+import fs from 'node:fs/promises';
+
+//reading a file and parsing it as json 
+
+try{
+   const rawData = await fs.readFile("./data.json");
+   const dataObj = JSON.parse(rawData)
+} catch(err){
+  console.log(`Error name: ${err.name}`);
+  console.log(`Error message: ${err.message}`);
+}
+
+this err object has 3 different properties to use to determine what went on to cause the error , and we have name and message along with stack 
+
+//using promises 
+
+fs.readFile("./data.json")
+.then(rawdata => {return JSON.parse(rawdata)
+})
+.catch(err => {
+console.log(`Error Name : ${err.name}`);
+  console.log(`Error message: ${err.message}`);
+})
+
+if promises is resolved then it goes to then block , and if promised is rejected due to any error then it goes to catch block 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+throw keyword 
+the throw statement throws a user-defined exception. Execution of the current function will stop (the statements after throw won't be executed), and control will be passed to the first catch block in the call stack. If no catch block exists among caller functions, the program will terminate. 
+
+this throw can be used like , we are opening application that reads data , but if it can't able to read data then application would not work , 
+
+//working with  callbacks 
+
+import fs from 'node:fs'
+
+fs.readFile('./data.json','utf8',(err,data)=>{
+
+ if(err){
+  console.log("error reading the file ")
+  throw err;
+
+ }
+ 
+ const dataObj = JSON.parse(data)
+ console.log(dataObj)
+console.log("complete ")
+ 
+})
+
+now there can comes error while parsing data, so we can use try catch here 
+fs.readFile('./data.json','utf8',(err,data)=>{
+
+ if(err){
+  console.log("error reading the file ")
+  throw err;
+
+ }
+ 
+try{
+const dataObj = JSON.parse(data)
+ console.log(dataObj)
+console.log("complete ")
+}
+catch(err){
+console.log("cannot parse json from file ")
+throw err;
+}
+ 
+ 
+})
+
+now we know that nested callbacks genrally gets you in problem so go for promises 
+
+--------------------------------------------------------
+using promises
+
+// import node filesystem module (the promise version )
+import fs from 'node:fs/promises';
+
+// import node filesystem module ( the callback version )
+import fsc from 'node:fs';
+
+
+//reading the file with the promises api 
+
+fs.readFile('./data.json','utf8')
+  .then(data => {
+    const dataObj = JSON.parse(data)
+    console.log(dataObj)
+    console.log("complete ")
+ 
+   })
+   .catch(err => {
+    console.log("could not complete loading and parsing ")
+    throw err;
+   
+   })
+    
+there are some situations , that when you are dealing with sdks or api that does not support promises and it only supports callbacks  , 
+so in this case you can actually create your own promises which is going to use the callback version of the api 
+
+
+// creating a custom promise with the callback api 
+
+we create a async function and we know async function will return promises but as we are using callback api so we need to create our own promise object which accepts two parameters resolve and reject . now these are two functions that we will call when we are ready to either resolve the promises or reject the promises 
+
+const readFile = async (filename) => {
+
+ return new Promise((resolve,reject)=>{
+  fsc.readFile('./data.json','utf8',(err,data)=>{
+  if(err) {
+  reject(err);
+   }
+
+  resolve(data)
+})
+});
+}
+
+now we can update the upper code (reading the file with promise api )
+fs.readFile('./data.json','utf8')
+  .then(data => {
+    const dataObj = JSON.parse(data)
+    console.log(dataObj)
+    console.log("complete ")
+ 
+   })
+   .then(()=>readFile('data.json'))  // here we are calling readfile function 
+   .then(data => console.log(data))
+   .catch(err => {
+    console.log("could not complete loading and parsing ")
+    throw err;
+   
+   })
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+// using promises with async / await 
+
+the async function declaration declares an async function where the await keyword is permitted within the function body. The async and await keywords enables asynchronous, promise-based behavior to be written in a cleaner style, avoiding the need to explicitly configure promise chains... Use of async and await enables the use of ordinary try/catch blocks around asynchronous code. 
+
+
+import fs from 'node:fs/promises'
+
+async function loadData(){
+const data = await fs.readFile('./data.json','utf8');    //await waits till the promise is resolved
+const dataObj = JSON.parse(data);
+console.log(dataObj)
+console.log("complete")
+}
+
+loadData().then(()=>console.log("Promise completed"))
+
+
+now to handle errors we can use try catch block 
+
+async function loadData(){
+
+try{
+  const data = await fs.readFile('./data.json','utf8');    //await waits till the promise is resolved
+const dataObj = JSON.parse(data);
+console.log(dataObj)
+console.log("complete")
+}catch(err){
+console.log("could not load and parse file ");
+throw err;
+}
+
+
+}
+
+loadData().then(()=>console.log("Promise completed"))
+
+-------------------------------------------------------------------------
+Top Level Await 
+
+Top-level await enables modules to act as big async functions: With top-level await, ECMAScript Modules(ESM) can await resources, causing other modules who import them to wait before they start evaluating their body. 
+
+
+

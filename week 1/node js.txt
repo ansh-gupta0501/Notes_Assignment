@@ -1,0 +1,36 @@
+node js :- open source and cross platform javascript runtime environment 
+node js runs the v8 javascript engine 
+
+
+v8 - it is a javascript engive developed by Google. it was initialy designed to power google chrome by parsing and executing javascript code efficiently. The engine is written in c++ and is known for its speed and optimization capabilities. 
+
+How V8 Works
+
+Just-In-Time (JIT) Compilation: Unlike traditional interpreters that execute code line-by-line, V8 uses JIT compilation. This means it compiles JavaScript into machine code at runtime, which significantly speeds up execution 
+Garbage Collection: V8 includes an efficient garbage collector that manages memory allocation and deallocation, ensuring that unused memory is reclaimed and the application runs smoothly
+
+Node.js and V8
+Node.js is a runtime environment that allows JavaScript to be executed outside of a web browser. By using V8, Node.js can take advantage of its high-performance features:
+
+Event-Driven Architecture: Node.js uses an event-driven, non-blocking I/O model. This means it can handle multiple operations concurrently without waiting for any single operation to complete, making it highly efficient for I/O-heavy tasks.
+
+Single-Threaded but Scalable: While Node.js operates on a single thread, it uses asynchronous operations to handle multiple connections simultaneously. This is particularly useful for building scalable network applications
+
+ 
+Node.js is primarily single-threaded. This means that it uses a single thread to handle multiple tasks. The core of Node.js’s architecture is the event loop, which allows it to perform non-blocking I/O operations. This design enables Node.js to handle many connections simultaneously without creating a new thread for each connection
+
+.
+
+Understanding the Event Loop
+
+The event loop is a mechanism that continuously cycles through a series of phases, executing callbacks and handling events. Here’s a simplified breakdown of how it works:
+
+Event Queue: Incoming requests are placed into an event queue.
+
+Event Loop: The event loop picks up requests from the queue and processes them.
+
+Callbacks: For each request, Node.js executes the associated callback function. If a callback involves a blocking operation (like file I/O or network requests), it delegates this to the thread pool.
+
+Thread Pool: Node.js uses a thread pool (managed by the libuv library) to handle these blocking operations. Once completed, the results are placed back into the event queue for the event loop to process
+
+.
