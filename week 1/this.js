@@ -50,5 +50,3 @@ const user = {
 // }
 
 // one()
-
-
