@@ -3,21 +3,21 @@
   
 */
 
-function setUserName(username){
-    console.log("inside setusername function ");
-    // return this 
-   this.username = username
-}
+// function setUserName(username){
+//     console.log("inside setusername function ");
+//     // return this 
+//    this.username = username
+// }
 
-function createUser(username,email,password){
-    setUserName(username)
-    this.email = email
-    this.password = password
-}
+// function createUser(username,email,password){
+//     setUserName(username)
+//     this.email = email
+//     this.password = password
+// }
 
-const chai = new createUser("ansh","ansh@gmail.com","123")
+// const chai = new createUser("ansh","ansh@gmail.com","123")
 
-console.log(chai); // createUser { email: 'ansh@gmail.com', password: '123' }        
+// console.log(chai); // createUser { email: 'ansh@gmail.com', password: '123' }        
                     // we see username is not set 
                     // because inside createUser functin , this setUserName function is not called , it is just referenced not called 
                     // it might be decieving that as we used brackets setUserName() so it must be called, but interally it is not called it is just referneced 
@@ -25,16 +25,16 @@ console.log(chai); // createUser { email: 'ansh@gmail.com', password: '123' }
                     // we have not hold any reference of this inner function to be used in outer function , so to save reference of this we use call keyword // other method include bind method 
                     //therefore , js has some methods which can be used to explicity call these methods 
 
-// function setUserName(username){
-//     this.username = username
-// }
+function setUserName(username){
+    this.username = username
+}
 
-// function createUser(username,email,password){
-//     // setUserName.call(username)  // but this also not works because when this function called , the username was saved in inner function(setusername) (this keyword  ) but we want to save it in createUser this keyword , so for this we pass this keyword of createUser to the setUsername
-//     setUserName.call(this,username) // after execution context removed of setUsername after executing all the data saved in this keyword of createUser 
-//     this.email = email
-//     this.password = password
-// }
+function createUser(username,email,password){
+    // setUserName.call(username)  // but this also not works because when this function called , the username was saved in inner function(setusername) (this keyword  ) but we want to save it in createUser this keyword , so for this we pass this keyword of createUser to the setUsername
+    setUserName.call(this,username) // after execution context removed of setUsername after executing all the data saved in this keyword of createUser 
+    this.email = email
+    this.password = password
+}
 
 // const chai = new createUser("ansh","ansh@gmail.com","123")
 // console.log(chai);  
@@ -136,6 +136,77 @@ console.log(chai); // createUser { email: 'ansh@gmail.com', password: '123' }
 
     This is a way to manage the execution context and ensure the correct this is used when calling a function inside another function.
 
+*/
+
+/*
+ This problem can also be solved by other ways 
+*/
+//  Using arrow functions inside createUser()
+// Not applicable directly to the setUserName as a standalone function, but if you refactor setUserName as an inline function inside createUser(), arrow functions inherit this from their parent scope.
+
+
+function createUser(username, email, password) {
+    const setUserName = (username) => {
+        console.log(this)
+        this.username = username;
+    };
+    setUserName(username);
+    this.email = email;
+    this.password = password;
+}
+
+// const chai =  new createUser('ansh gupta','ansh@gmail.com','123')
+// console.log(chai)
+
+/* 
+   if we don't use new keyword in const chai = new createUser() then console.log(chai) gives undefined and console.log(this) gives global object but 
+   if we use new keyword  then console.log(chai) gives the correct object and console.log(this ) gives createUser {} 
+
+
+    Case 1: createUser(...) — called like a regular function
+No new keyword means it's a normal function call, not a constructor.
+
+In non-strict mode, this inside createUser() refers to the global object (window in browsers, global in Node.js).
+
+In strict mode, this would be undefined.
+
+➡️ Therefore:
+
+this.username = username; sets a property on the global object.
+
+The function doesn't return anything, so chai becomes undefined.
+
+
+ Case 2: new createUser(...) — called as a constructor
+JavaScript creates a new empty object: this = {}.
+
+this inside the function refers to this new object.
+
+If you don’t return anything, JavaScript will automatically return this new object.
+
+➡️ Therefore:
+
+this.username = ..., this.email = ... assign properties to the new object.
+
+chai gets assigned this newly constructed object.
+
+
+Why console.log(this) behaves differently in both cases
+
+➤ Inside an arrow function:
+
+const setUserName = (username) => {
+    console.log(this);
+};
+Arrow functions do not have their own this.
+
+Instead, they lexically bind this — they inherit it from the enclosing scope.
+
+So:
+
+In Case 1 (no new), the arrow function inherits this from the global context.
+
+In Case 2 (new), the arrow function inherits this from the createUser function’s this, which is the newly created object.
 
 
 
