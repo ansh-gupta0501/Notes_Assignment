@@ -1,6 +1,6 @@
 //recursively list files in a directory 
 
-const { log } = require('console');
+
 const fs = require('fs');
 const path = require('path');
 
@@ -14,7 +14,7 @@ function listFilesRecursively(dir) {
             if(ele.isDirectory()){
                 listFilesRecursively(path.join(dir,ele.name));
             }
-            else if(ele.isFile()&&ele.name.endsWith(".txt")){
+            else if(ele.isFile()){
                 console.log(ele.name);
             }
 
@@ -24,5 +24,5 @@ function listFilesRecursively(dir) {
     });
 }
 
-// Usage
-listFilesRecursively("C:/Users/ansh.gupta/Documents/Work/Assignments");
+
+listFilesRecursively("C:/Users/ansh.gupta/Documents/Work/Assignments");  // don't use path like \Users because javascript understands \c with  some predefined functions like \n \t etc. 
