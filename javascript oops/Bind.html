@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn"> click Me</button>
+</body>
+
+<script>
+    class React{
+        constructor(){
+            this.library = "React",
+            this.server = 'http://localhost:3000'
+
+            document
+                .querySelector('button')
+                .addEventListener('click',this.handleClick)
+                // .addEventListener('click',this.handleClick.bind(this))  // bind the this object 
+        }
+
+        // handleClick(){
+        //     console.log("button clicked")
+        //     // console.log(this.server) //undefined
+        //     // console.log(this) //<button id="btn"> click Me</button> 
+        //     console.log(this) // after using bind 
+        //     console.log(this.server)
+            
+            
+        // }
+
+        // if we make arrow function then no need for bind 
+
+        handleClick = ()=>{
+              console.log("button clicked")
+         
+            console.log(this) 
+            console.log(this.server)
+        }
+    }
+    const app = new React()
+       
+    //without using bind
+    // in this case , when we clicked on a button , we are getting output :- button clicked undefined  
+    //   console.log(this.server) giving undefined 
+    //   console.log(this) giving <button id="btn"> click Me</button>
+
+    //by using bind 
+    // we bind the this keyword(this.library , this.server complete object ) along with button 
+
+</script>
+</html>
