@@ -41,10 +41,11 @@ class Timer {
         setInterval(this.incrementTime, 1000); 
     }
 
-    incrementTime() {
+     incrementTime =  () =>{
         this.time++;
         console.log(this.time);
     }
+    
 }
 
  const timer = new Timer(); 
@@ -89,7 +90,7 @@ class MyClass {
 }
 
 const myInstance = new MyClass();
-setTimeout(myInstance.increment, 1000); // Works as expected: prints 43
+// setTimeout(myInstance.increment, 1000); // Works as expected: prints 43
 
 
 
