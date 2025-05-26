@@ -44,12 +44,12 @@ An **organized collection of data**. A method to manipulate and access the data.
 
 ## DB vs Schema vs Tables (we can also see its structure in pgAdmin)
 
--- suppose we have instagram which have database DB which is top level 
--- instagram has so many things like **users, profile , followers, profilepic, reels , media ,post** :- so we can group them or categories them using **Schema**
+- suppose we have instagram which have database DB which is top level 
+- instagram has so many things like **users, profile , followers, profilepic, reels , media ,post** :- so we can group them or categories them using **Schema**
 
--- eg. we have public schema (in pgadmin inside schema) :- in which we set posts , or reels data  . Next we can make one more schema related to users in which we can put users data like his followers,following 
+- eg. we have public schema (in pgadmin inside schema) :- in which we set posts , or reels data  . Next we can make one more schema related to users in which we can put users data like his followers,following 
 
--- eg. in public schema , we make two tables one for reels data and one for posts data 
+- eg. in public schema , we make two tables one for reels data and one for posts data 
 
 
 
