@@ -53,15 +53,4 @@ An **organized collection of data**. A method to manipulate and access the data.
 
 
 
- -- List down existing databases
- -- SELECT Datname FROM pg_database;
- -- \l (for command line shortcut)
-
- SELECT datname FROM pg_database;
- -- dataname and pg_database are postgresql system objects not sql keyword 
- -- pg_database is a sytem table
- -- datname is a column in that table 
-
- select * from pg_database;
-
  
