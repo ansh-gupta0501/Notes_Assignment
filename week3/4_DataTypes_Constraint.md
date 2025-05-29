@@ -48,3 +48,22 @@
 
 - **CREATE TABLE employees(id SERIAL PRIMARY KEY, firstname VARCHAR(50) lastname VARCHAR(50))**
 
+# CHECK
+- use case - used for data validation like phone no etc. 
+- we add condtion in check 
+- **CREATE TABLE contacts(name VARCHAR(50), mob VARCHAR(15) UNIQUE CHECK (LENGTH(mob) >= 10));**
+
+- **ALTER TABLE person ADD COLUMN mob VARCHAR(15) CHECK (LENGTH(mob) > = 10);**
+
+### Named Constraint :- Its benefit is that if any error we get it in console by constraint name 
+
+```sql
+CREATE TABLE contacts(
+    name VARCHAR(50),
+    mob VARCHAR(15) UNIQUE,
+    CONSTRAINT mob_no_less_than_10digits CHECK (LENGTH(mob) >= 10)
+);
+```
+
+
+
