@@ -1,7 +1,5 @@
 
----
 
-```markdown
 # 🟢 Node.js and the V8 JavaScript Engine
 
 ## 🔍 What is Node.js?
@@ -91,7 +89,6 @@ The **Event Loop** is the heart of Node.js's asynchronous behavior.
 
 📘 **Fun Fact**: Node.js became popular because it allowed JavaScript — once limited to browsers — to run servers and full-stack applications!
 
-```
 
----
+
 

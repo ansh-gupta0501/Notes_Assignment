@@ -1,7 +1,5 @@
 
----
 
-````markdown
 # Synchronous vs Asynchronous in JavaScript
 
 ## 🕰️ Synchronous vs Asynchronous
@@ -222,8 +220,3 @@ console.log(dataObj);
 | Promises    | `.then().catch()` | Chaining tasks                            |
 | Async/Await | `async`/`await`   | Cleaner async code, better error handling |
 
----
-
-```
-
-```
