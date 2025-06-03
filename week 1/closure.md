@@ -247,3 +247,5 @@ const orangecolor = clickHandler('orange');
 const redcolor = clickHandler('red')
 orange.onclick = orangecolor
 red.onclick = redcolor
+
+
