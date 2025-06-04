@@ -6,6 +6,11 @@ const app = express();
 dotenv.config();
 app.use(express.json());
 
+import {testDBConnection} from './db.js';
+
+testDBConnection()
+
+
 // Basic health check
 app.get('/', (req, res) => {
   

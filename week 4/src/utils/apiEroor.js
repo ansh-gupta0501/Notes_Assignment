@@ -43,7 +43,7 @@ export {ApiError}
 
 
 //example use:
-throw new ApiError(404,"User not found");
+// throw new ApiError(404,"User not found");
 
 /*
 What this line does:

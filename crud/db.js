@@ -12,7 +12,8 @@ const pool = new Pool({
   port: process.env.PG_PORT,
 });
 
-const testDBConnection = async () => {
+
+export const testDBConnection = async () => {
   try {
     const client = await pool.connect(); 
     console.log('Postgres connected successfully');
@@ -23,7 +24,7 @@ const testDBConnection = async () => {
   }
 };
 
-testDBConnection();
+// testDBConnection();
 
 
 export const query = (text, params) => pool.query(text, params);

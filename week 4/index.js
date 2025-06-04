@@ -1,18 +1,21 @@
-import dotenv from 'dotenv'
+import dotenv from "dotenv";
 
 // dotenv.config({
 //     path : './.env'
 // })
+
 dotenv.config()
 
-import {testDBConnection} from './db/index.js'
-import { app } from './app.js'
 
+
+import { User } from "./src/models/user.model.js";
+import {testDBConnection} from './src/db/index.js'
+import { app } from './src/app.js'
 
 testDBConnection()
 .then(()=>{
     app.listen(process.env.PORT || 8000 , ()=>{
-        console.log('Server is running at port ')
+        console.log(`Server is running at port ${process.env.PORT}`)
     })
 
     app.on("error",(error)=>{

@@ -1,20 +1,22 @@
+// console.log("inside db file ")
+// console.log("PG_USER from db file:", process.env.PG_USER);
+
 import dotenv from 'dotenv'
 
-dotenv.config({
-    path : './.env'
-})
-
+dotenv.config()
+// console.log("inside db file ")
+// console.log(process.env)
 
 import pkg from 'pg';
 const { Pool } = pkg;
 
 import {PG_DB} from "../constant.js"
  
-console.log(process.env.PG_USER)
-console.log('pg password',process.env.PG_PASSWORD)
-console.log('pg password',typeof process.env.PG_PASSWORD)
-console.log('pg_db' ,PG_DB)
-console.log('TYPE OF PGDB' ,typeof PG_DB)
+// console.log(process.env.PG_USER)
+// console.log('pg password',process.env.PG_PASSWORD)
+// console.log('pg password',typeof process.env.PG_PASSWORD)
+// console.log('pg_db' ,PG_DB)
+// console.log('TYPE OF PGDB' ,typeof PG_DB)
 
 // console.log(PG_DB)
 const pool = new Pool({
