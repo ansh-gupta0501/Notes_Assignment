@@ -1,10 +1,10 @@
-import dotenv from "dotenv";
+import dotenv from "dotenv/config";
 
 // dotenv.config({
 //     path : './.env'
 // })
 
-dotenv.config()
+// dotenv.config()
 
 
 

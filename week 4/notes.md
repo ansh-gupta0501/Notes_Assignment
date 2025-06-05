@@ -85,7 +85,31 @@
 
 ### ACCESS_TOKEN
 - It will not stored on database 
+- they are usually short lived
+- you can access this token when there is need of authentication in any particular feature
+- when this token expires , you need to login again using password 
 
 ### Refresh_token
 - store in database
+- they are usually long lived
+- this token was also given to user 
+- in this , user is validated by access token but no need to enter password again and again . hit a end point if your access token and access token saved in database is same then new access token will be provided.
+
+
+---
+### Problem statement 
+- we are making backend for youtube, and making functionallity of subscription like how many subscibers of a particular channel and how many channels he has subscribed. Note :- both channel and subscribers are users only 
+
+- now one solution to do that is making subscriber array field in user model but if a channel has millions of subscribers than our array will be very large and then operations on array will be difficult . Therefore we have made different schema for subscription
+
+- **so another solution to solve this problem is aggregation pipelines**
+
+- now understanding subscription model 
+- suppose we have a,b,c,d,e users and 1,2,3 channels . now a has subscribed 1 channel . so a new document formed with channel 1 and subscriber a. now a has subscribed 2 channel . again new document formed with channel 2 and subscriber a. now b has subscribed channer 1 so again new document formed with channel 1 and subscriber b. 
+
+- so everytime new subscriber formed
+- now if we want to find how many subscribers channel 1 has. then we count total no of documents in which channe1 exists.
+- similarly if we want how many channels a users has subscribed then we count total no of documents in which a exists.
+
+
 

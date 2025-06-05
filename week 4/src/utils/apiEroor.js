@@ -10,6 +10,7 @@ We need consistent , sturctured error responses - not just random strings. this 
 class ApiError extends Error{
     constructor(statusCode,message = "Something Went Wrong",errors = [],stack = ""){
         super(message) // call build-in Error constructor
+       console.log("insdie class")
         this.statusCode = statusCode  //e.g. 400,404,500
         this.data = null 
         this.message = message

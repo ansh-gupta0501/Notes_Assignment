@@ -1,6 +1,6 @@
 // console.log("inside usermodel ")
-import dotenv from "dotenv";
-dotenv.config()
+// import dotenv from "dotenv";
+// dotenv.config()
 
 
 console.log("token",process.env.ACCESS_TOKEN_SECRET)
@@ -8,6 +8,8 @@ console.log("token",process.env.ACCESS_TOKEN_SECRET)
 import mongoose , {Schema} from "mongoose";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2'
+
 
 const userSchema = new Schema(
     {
@@ -51,10 +53,18 @@ const userSchema = new Schema(
         },
         refreshToken : {
             type : String
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false
         }
 
     },{timestamps : true}
 )
+
+
+userSchema.plugin(mongooseAggregatePaginate);
+
 
 //hooks acting as middleware 
 userSchema.pre("save", async function(next){         // pre is hook and act as middlewares so we use next 
