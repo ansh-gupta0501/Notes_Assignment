@@ -116,6 +116,7 @@ const getAllUsers = asyncHandler(async(req,res)=>{
 const softDelete = asyncHandler(async(req,res)=>{
 
     const user = await User.findById(req.params.id)
+    
     if(!user){
         return new ApiError(400,"user not found")
     }
