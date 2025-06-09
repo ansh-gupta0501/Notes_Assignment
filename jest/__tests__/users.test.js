@@ -1,9 +1,7 @@
 
-
-// import {describe, test,it,expect} from 'jest';
-import {max,calculateAverage} from '../index.js'
-
-import { getData } from '../handler.js';     
+import {max,calculateAverage} from '../index.js';
+import request from 'supertest'
+import app from '../app.js'
 import { jest } from '@jest/globals';
 
 
@@ -50,55 +48,13 @@ describe('calculateAverage',()=>{
 })
 
 
-const mockRequest = {
-    body: {
-        inputData: 1
-    }
-};
-
-const mockResponse = {
-    /*
-    jest.fn() creates a mock function — it doesn’t do anything but records whether it was called, with what arguments, etc.
-
-    You use these to spy on how getData() behaves:
-
-    Was res.send() called?
-
-    Was it called with the right data?
-
-    Was res.sendStatus(400) triggered?
-
-    */
-    sendStatus : jest.fn(),
-    send : jest.fn()
-};
-
-describe('getData',()=>{
-    it('get User data',()=>{
-        // as this getData takes two arguments req and res , so here the mock comes
-        getData(mockRequest,mockResponse)
-
-        expect(mockResponse.send).toHaveBeenCalledWith();
-        // expect(mockResponse.sendStatus).not.toHaveBeenCalled();
+describe('GET /api/hello',()=>{
+    it('should return Hello, World',async ()=>{
+        const res = await request(app).get('/api/hello');
+        expect(res.statusCode).toBe(200);
+        expect(res.body.message).toBe('Hello, World!');
     });
+});
 
 
-//     it('should return 400 if inputData is invalid', () => {
-//     const mockRequest = {
-//       body: {
-//         inputData: 999 // not in mockData
-//       }
-//     };
 
-//     const mockResponse = {
-//       sendStatus: jest.fn(),
-//       send: jest.fn()
-//     };
-
-//     getData(mockRequest, mockResponse);
-
-//     expect(mockResponse.sendStatus).toHaveBeenCalledWith(400); //This is a Jest matcher that checks whether a mock function (like jest.fn()) was called with specific arguments.
-//     expect(mockResponse.send).not.toHaveBeenCalled();  //This checks whether the mock function was not called at all.
-//   });
-
-})

@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "./generated/client"
+  
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// creating our model or schema or table 
+
+model User{
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?                                  // The ? makes this field optional — it can be null.
+  gender    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt      // @updatedAt: Tells Prisma to automatically update this field every time the record is updated.
+}
+
+// @ symbol is used for field-level attributes (also called "decorators") that add metadata or constraints to a specific field.
+
+//@id makes the fiels a primary key 
+
+// to make  composite keys (e.g., @@id([email, anotherField]))
+
+
+// To map your data model to the database schema, you need to use the prisma migrate CLI commands:
+
+// npx prisma migrate dev --name init
+
+/*
+   This command does two things:
+
+    It creates a new SQL migration file for this migration
+    It runs the SQL migration file against the database
+*/

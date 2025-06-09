@@ -1,7 +1,3 @@
-import express from 'express'
-const app = express()
-
-import {getData} from './handler.js'
 
 export function max(a, b) {
   if (a > b) return a;
@@ -17,8 +13,3 @@ export function calculateAverage(numbers){
 }
 
 
-app.get('/api/users',getData)
-
-// app.listen(5000,()=>{
-//   console.log('server started at port 5000')
-// })

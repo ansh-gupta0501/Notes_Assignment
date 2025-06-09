@@ -195,3 +195,53 @@ describe('calculateAverage',()=>{
 })
 
 ```
+
+### Isolating Units - Mocking (Intermediate)
+- **Mock Functions** let you isolate the unit being tested from external dependencies like databases
+
+- Let's say you have a service:
+```javascript
+function getUserById(id) {
+  return { id, name: "John Doe" };
+}
+
+module.exports = { getUserById };
+
+```
+
+```javascript
+const express = require('express');
+const router = express.Router();
+const userService = require('../services/userService');
+
+router.get('/user/:id', (req, res) => {
+  const user = userService.getUserById(req.params.id);
+  res.status(200).json(user);
+});
+
+module.exports = router;
+```
+
+```javascript
+const request = require('supertest');
+const express = require('express');
+const userRouter = require('../routes/user');
+const userService = require('../services/userService');
+
+jest.mock('../services/userService'); // 👈 Mocking service
+
+const app = express();
+app.use('/api', userRouter);
+
+describe('GET /api/user/:id', () => {
+  it('should return mocked user', async () => {
+    userService.getUserById.mockReturnValue({ id: '1', name: 'Mock User' });
+
+    const res = await request(app).get('/api/user/1');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe('Mock User');
+  });
+});
+
+```
