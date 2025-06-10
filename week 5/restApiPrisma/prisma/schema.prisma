@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"] // This enables the fullTextSearch feature in Prisma Client, allowing you to use full-text search capabilities in your queries.
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id     @default(autoincrement())
+  name        String? 
+  email       String    @unique
+  password    String?
+  post        Post[] // (virtual field) // Relation field to access User’s posts in queries
+  comment     Comment[] // This is a relation field that allows you to navigate from a user to their comments // (virtual field) Relation field to access comments in queries
+  created_at  DateTime  @default(now())
+}
+
+model Post {
+  id            Int       @id @default(autoincrement())
+  user          User      @relation(fields: [user_id],references: [id], onDelete: Cascade)    // user is  Virtual field in Prisma      // field in Prisma allows you to navigate from a post to its user when querying.    // in fields we define first the field in the current model with whom you want to establish relation and in references we define the field in the other model with whom you want to establish relation // also need to define in other model about this relation   
+  user_id       Int       // foreign key to User model //  it stores the id of the user who owns this post.
+  comment       Comment[]  // this is a relation field that allows you to navigate from a post to its comments // virtual field) Relation field to access comments in queries
+  title         String
+  description   String
+  comment_count Int    @default(0) // BigInt is used for large numbers, like comment counts
+  created_at    DateTime  @default(now())
+}
+
+model Comment {
+  id            String    @id @default(uuid())
+  post          Post      @relation(fields: [post_id],references: [id], onDelete: Cascade) // post is a Virtual field in Prisma
+  post_id       Int      //Foreign key linking Comment to Post
+  user          User      @relation(fields: [user_id],references: [id], onDelete: Cascade) // user is a Virtual field in Prisma
+  user_id       Int      // Foreign key linking Comment to Post
+  comment       String
+  created_at    DateTime  @default(now())
+
+}

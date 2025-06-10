@@ -139,4 +139,4 @@ mockUserService.saveUser = jest.fn().mockRejectedValue(new Error("DB down"));
 
 ---
 
-Would you like a version of this using a **class-based service**, or saving users in an in-memory list to simulate a mini-DB?
+
