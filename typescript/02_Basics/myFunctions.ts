@@ -163,5 +163,6 @@ The never type represents values which are never observed. In a return type, thi
 so we use never whereever we want forcefully terminate the program , like in case of error handling
 */
 
+// so these are the situations where we need to use union types for multiple return types
 
 export {}
