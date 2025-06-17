@@ -94,8 +94,8 @@ when you use the modifiers in constructor params, you don’t need to write anyt
 // Getters/setters 
 
 class User {
-    private _courseCount = 1   // means whenever user comes it get 1 course atleast 
-    
+    // private _courseCount = 1   // means whenever user comes it get 1 course atleast 
+    protected _courseCount = 1  // to access in child class 
     
     readonly city: string = "jaipur"
 
@@ -137,9 +137,21 @@ const ansh = new User('h@h.com',"ansh","123")
 // console.log(ansh.getAppleEmail) // don't use ansh.getAppleEmail() as it is getter not a function 
 
 
-console.log(ansh.courseCount); // 1
+// console.log(ansh.courseCount); // 1
 ansh.courseCount = 50
 
-console.log(ansh.courseCount) // 50
+// console.log(ansh.courseCount) // 50
 
-// 3:15:10
+// ------------------------
+
+// inheritance in typescript
+
+class SubUser extends User{ // this subuser class will extends parent class which is user  but not private members
+    isFamily: boolean = true;
+    
+    changeCourseCount(){
+        // this._courseCount = 4  // this will give error that  Property '_courseCount' is private and only accessible within class 'User'.
+        this._courseCount = 4    // if we make this variable protected then we can access it here as protected member can be accessed in child class only 
+    }
+}
+
