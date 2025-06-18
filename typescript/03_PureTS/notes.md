@@ -97,3 +97,11 @@ in your project directory creates a **`tsconfig.json`** file. This file configur
 - it is because when you compile .ts file just by tsc command it does not look for tsconfig.json file.  But when you put it in watchmode then it keeps on watching and also watch it based on tsconfig.json and try to run all these things there. 
 
 - if we got any error in ts file , the js file will still produce but yes we can also configure it in tsconfig.json file not to produce .js file if there any error in .ts file 
+
+
+---
+
+# Generics
+
+- Generics make our components(functions, arrays ) reusable 
+- 

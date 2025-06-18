@@ -57,4 +57,3 @@ const ag = new Instagram("test","Test",3) // now this works fine
 ag.getReelTime() // this works fine
 
 
-// 3:35
