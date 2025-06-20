@@ -1,3 +1,5 @@
+// this is for like database logic
+
 import { BookEntity } from "../entities/book.entity";
 
 export default class BookRepo {

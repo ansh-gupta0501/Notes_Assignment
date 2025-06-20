@@ -1,4 +1,4 @@
-// database table 
+//type of  database table 
 
 export interface BookEntity{
     id : number

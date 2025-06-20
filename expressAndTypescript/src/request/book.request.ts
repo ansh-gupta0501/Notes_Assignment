@@ -1,4 +1,4 @@
-// in this we accept client side data 
+// in this we define type of  client side data 
 export interface BookRequestPayload {
     bookId: number
     bookName: string 

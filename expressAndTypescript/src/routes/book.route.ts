@@ -37,7 +37,7 @@ BookRouter.get('/findAll',(req: Request,res: Response)=>{
 })
 
 BookRouter.post('/add',(req: Request,res: Response)=>{
-    res.json(BookService.addBook(req.body as BookRequestPayload)) // we are accepting req.body type as bookrequestpayload
+    res.json(BookService.addBook(req.body as BookRequestPayload)) // we are accepting req.body type as bookrequestpayload  // This is a type assertion, which tells TypeScript: "Trust me, req.body is of type BookRequestPayload." But if req.body is missing fields like authorName or has fields with wrong casing (like authorname), TypeScript won’t catch this at runtime, and Express (by default) won’t validate the request payload.
 })
 
 BookRouter.get('/findById/:id',(req: Request,res: Response)=>{
