@@ -42,22 +42,22 @@
 
 - **app.service.ts** inside src/folder. In this file we write our business logic, calculations. Controller file call this service file. Whatever req comes to controller , controller call the service based on the request
 
-**main.ts** inside src/ folder. This is the entry point of our nest js application. This is the first file which will executed. It registers our app on a port number 
+- **main.ts** inside src/ folder. This is the entry point of our nest js application. This is the first file which will executed. It registers our app on a port number 
 
-**test/** this directory is for testing any specific feature or any controller.
+- **test/** this directory is for testing any specific feature or any controller.
 
-**eslint.config.mjs** This file gives warning if we don't follow nest js standards. Purpose: ESLint configuration in modern ES Module format.Defines code style, formatting, linting rules.
+- **eslint.config.mjs** This file gives warning if we don't follow nest js standards. Purpose: ESLint configuration in modern ES Module format.Defines code style, formatting, linting rules.
 
-**nest-cli.json** Configuration file for Nest CLI.
+- **nest-cli.json** Configuration file for Nest CLI.
  Nestjs cli read this file when we run any command on cli 
 
-**tsconfig.build.json** This file is used during production. when optimization typescript compilation done this file is used
+- **tsconfig.build.json** This file is used during production. when optimization typescript compilation done this file is used
 
-**tsconfig.json** This tells how to compile typescript
+- **tsconfig.json** This tells how to compile typescript
 
-**package-lock.json** The dependencies used in our application was listed in package.json file. But There are also subdependencies of these dependencies. So these are listed in this file.Means in this file we get detailed information of the subdependencies or the detailed information of dependenices listed in our package.json file . This file also locks dependency version. Records exact versions of all installed packages and their sub-dependencies.Ensures consistency across different environments and installs.
+- **package-lock.json** The dependencies used in our application was listed in package.json file. But There are also subdependencies of these dependencies. So these are listed in this file.Means in this file we get detailed information of the subdependencies or the detailed information of dependenices listed in our package.json file . This file also locks dependency version. Records exact versions of all installed packages and their sub-dependencies.Ensures consistency across different environments and installs.
 
-**package.json** this file have information regarding our project like versions , script,dependencies
+- **package.json** this file have information regarding our project like versions , script,dependencies
 
 | File/Folder                  | Purpose                                 |
 | ---------------------------- | --------------------------------------- |
@@ -96,7 +96,7 @@
 - Used for routing , dependency injection , validation etc. 
 
 
-### creating controllers file using cli
+### Creating controllers file using cli
 - **nest g controller controller_name**  g means generate . It will create a folder with name controller_name and inside that folder , it also create 2 files controller_name.controller.ts and controller_name.controller.spec.ts (for testing).
 It will also update the app.module file by registering controller in that. 
 
@@ -118,7 +118,7 @@ It will also update the app.module file by registering controller in that.
 - Services are part of the dependency injection system.
 - Logic like fetching data , calculations, or API calls goes inside services.
 
-### creating services file using cli
+### Creating services file using cli
 - **nest g s service_name** g means generate , s means services
 
 # Modules
@@ -127,7 +127,7 @@ It will also update the app.module file by registering controller in that.
 - Everty nest js app has at least on module
 - we should make separate module for each feature. like we have employee feature in our app so we make a module employee and in this we register our employee controller, service. In the main app.module , we import this employee module
 
-### creating module file using cli
+### Creating module file using cli
 - **nest g module module_name** g means generate
 
 # Architecture Overview of nest js 
@@ -184,7 +184,7 @@ It will also update the app.module file by registering controller in that.
 - It promotes loose coupling(classes don't tightly depend on each other)
 - It improves readability and maintainability
 
-### **why directly creating a service instance (`new CategoryService()`) inside a controller is generally a bad idea in NestJS** and what benefits Dependency Injection (DI) brings.
+### **Why directly creating a service instance (`new CategoryService()`) inside a controller is generally a bad idea in NestJS** and what benefits Dependency Injection (DI) brings.
 
 ```ts
 @Controller('category')
@@ -271,7 +271,7 @@ export class CategoryController {
 
 ---
 
-# Rest API & HTTP methods
+# Rest API & HTTP methods (for practical implementation ,check student module )
 
 ### What is an api?
 - It allows two applications to talk to each other.( frontend and backend communicate with each other through api )
@@ -292,7 +292,316 @@ export class CategoryController {
 - PATCH :- Used to partially update existing data
 - Delete :- Used to remove data.
  
- ### Importance of Rest API
- - Organzes how clients interact with your server.
- - Keeps code clean, structured, and reusable
- - Makes your backend work like a service
+### Importance of Rest API
+- Organzes how clients interact with your server.
+- Keeps code clean, structured, and reusable
+- Makes your backend work like a service
+
+---
+
+# DTO (Data Transfer Object) (for practical implementation check Customer module)
+- An object that carries data between layers (like from client to backend).
+- Used to define the shape of incoming request data.
+- Ensures only required data is passed (security + validation)
+- Eg. user had a form on the client side and he is submitting the form. There were three fields inside that form (name,email,password). Now when he submits that form, basicaly we will have a DTO created on the back end. DTO will validate that data. That means it will check that data as we would have already defined this thing inside the DTO that basically the data of student or anything else that is coming to us from frontend , it should only contain name,email, password. There should not be any extra data here. So DTO provides security as we have already define the data that will come from frontend. 
+- By default, nest js don't apply dto validations because typscript is compile-time only. During run time , all the validations we have made in typescript, nest js can't apply that. So we need to explicit apply validations using concept **class-validator** , **validation pipes** so that we can apply validations during run time on DTOs
+
+- Install package **class-validator** and **class-transformer** using npm i
+- **class-validator** library validates the properties of Typescript classes.In these , we get many such decorators available like isstring, isint, isemail. This ensures data coming from api is of the expected type and format
+- **class-transformer** this library helps in converting plain json objects to dto class instances because this class-validator validates data on class instances not on objects. But from the frontend , when data coming from client side is in json format so need to convert this to class instances
+
+# Interface in typescript
+- Interface define the structure(Type) of an object
+- Help write clean,structured , type-safe code.
+- Used for both request(DTOs) and response objects.
+- We can use interfaces with DTOs , response objects etc. 
+
+### Doubts regarding dto and interfaces
+
+## What is a DTO (Data Transfer Object)?
+
+A **DTO** is a **TypeScript class** that defines the shape of data you expect to receive or send — especially in communication between client and server.
+
+In your case:
+
+```ts
+export class CreateCustomerDto {
+  name: string;
+  age: number;
+}
+```
+
+This says: *“When creating a customer, I expect an object with a string `name` and a number `age`.”*
+
+## Why use DTO instead of just an interface or plain `@Body()` object?
+
+### 1. **TypeScript Interfaces are compile-time only**
+
+* Interfaces **do not exist at runtime**.
+* You can’t use interfaces for runtime validation or transformation.
+* NestJS (and libraries like class-validator) **work with classes**, not interfaces.
+
+### 2. **DTO Classes enable runtime validation**
+
+By defining DTOs as **classes**, you can attach decorators (like from `class-validator`) to validate data automatically:
+
+```ts
+import { IsString, IsInt } from 'class-validator';
+
+export class CreateCustomerDto {
+  @IsString()
+  name: string;
+
+  @IsInt()
+  age: number;
+}
+```
+
+Then, with NestJS’s ValidationPipe enabled, invalid data is rejected **before** it reaches your service.
+
+### 3. **Security: Whitelisting properties**
+
+With DTO classes and validation, you can **ensure only expected fields are accepted** and any extra fields are stripped out (using the ValidationPipe option `whitelist: true`).
+
+This protects you from clients sending extra unexpected fields.
+
+## Why not just use `@Body() body: any` or `@Body() body: Customer`?
+
+* `any`: No type safety, no validation, vulnerable to malformed data.
+* `Customer` interface: Like other interfaces, no runtime presence → no validation.
+* Using DTO classes allows **strict validation and transformation**.
+
+
+## How does NestJS create DTO instances?
+
+When you use the `@Body()` decorator with a DTO class type like:
+
+```ts
+@Post()
+addCustomer(@Body() createCustomerDto: CreateCustomerDto) {
+  // ...
+}
+```
+
+NestJS uses **class-transformer** (if ValidationPipe is enabled) to:
+
+* Transform the plain JSON object from the request body into an **instance of the DTO class**.
+* Then run the validators attached to the class.
+
+So, you don't create DTO instances manually — NestJS does it for you when handling the incoming request.
+
+---
+
+## Summary
+
+| Aspect                                   | Interface | DTO Class             |
+| ---------------------------------------- | --------- | --------------------- |
+| Exists at runtime?                       | No        | Yes                   |
+| Allows validation?                       | No        | Yes (with decorators) |
+| Enables transformation?                  | No        | Yes                   |
+| Security (whitelist)                     | No        | Yes                   |
+| Used by NestJS `@Body()` for validation? | No        | Yes                   |
+
+
+## Example with validation
+
+```ts
+import { IsString, IsInt } from 'class-validator';
+
+export class CreateCustomerDto {
+  @IsString()
+  name: string;
+
+  @IsInt()
+  age: number;
+}
+```
+
+And enable validation globally in your `main.ts`:
+
+```ts
+import { ValidationPipe } from '@nestjs/common';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+This will **automatically validate incoming data** and reject bad requests.
+
+
+---
+# Custom Pipes (for practicall implementation check common folder and myname folder)
+- Pipes are used to transform or validate incoming data. 
+- NestJS allows you to create your own Custom Pipes.
+- They can be used for custom validation, data transformation, or business logic filtering.
+- A pipe runs before the data hits the route handler(controller method)
+- You can apply pipes at method level, controller level, or globally.
+- Custom pipes implement the PipeTransform interface. 
+- Generate custom pipes using cli **nest g pipe pipe_name** . pipe_name means for what purpose you are making pipe for like **nest g pipe uppercase**
+- Best practice, the above command will make a folder uppercase in the src directory . but we want that we form custom pipes in a seprate folder like a common folder in which we have pipe folder and then uppercase pipe. so for this we use command **nest g pipe common/pipes/uppercase**
+
+
+# Your Example Recap
+
+You have:
+
+1. **Controller:**
+
+```ts
+import { Body, Controller, Post } from '@nestjs/common';
+import { UppercasePipe } from 'src/common/pipes/uppercase/uppercase.pipe';
+
+@Controller('myname')
+export class MynameController {
+  @Post('custom')
+  transformName(@Body('name', new UppercasePipe()) name: string) {
+    return { message: `Received name: ${name}` };
+  }
+}
+```
+
+2. **Pipe:**
+
+```ts
+import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
+
+@Injectable()
+export class UppercasePipe implements PipeTransform {
+  transform(value: any, metadata: ArgumentMetadata) {
+    if (typeof value === 'string') {
+      return value.toUpperCase();
+    }
+    return value;
+  }
+}
+```
+
+
+# What’s Happening Here?
+
+
+## 1. **What is a Pipe in NestJS?**
+
+* Pipes are **classes** that implement the `PipeTransform` interface.
+* They receive input data **before** it reaches the route handler.
+* Pipes can **transform** the data or **validate** it.
+* The transformed data is then passed on to the controller method.
+
+## 2. **Pipe interface — `PipeTransform`**
+
+```ts
+export interface PipeTransform {
+  transform(value: any, metadata: ArgumentMetadata): any;
+}
+```
+
+* Every pipe must implement a `transform()` method.
+* `value` — the input data to transform.
+* `metadata` — extra info about the context of the data (like what parameter it's attached to).
+
+---
+
+## 3. **Your custom pipe — `UppercasePipe`**
+
+```ts
+@Injectable()
+export class UppercasePipe implements PipeTransform {
+  transform(value: any, metadata: ArgumentMetadata) {
+    if (typeof value === 'string') {
+      return value.toUpperCase();
+    }
+    return value;
+  }
+}
+```
+
+* The pipe checks if the incoming `value` is a string.
+* If yes, it converts it to uppercase.
+* Otherwise, it returns the value unchanged.
+* The `@Injectable()` decorator marks this class as a provider NestJS can inject if needed (best practice).
+
+---
+
+## 4. **How the pipe is applied in the controller**
+
+```ts
+transformName(@Body('name', new UppercasePipe()) name: string)
+```
+
+* `@Body('name')` extracts the `name` property from the request body.
+* `new UppercasePipe()` tells NestJS to apply this pipe **only** to that `name` property.
+* So before `name` gets passed into the method, it flows through the pipe.
+
+Example:
+
+Request body:
+
+```json
+{ "name": "john doe" }
+```
+
+* `@Body('name')` picks `"john doe"`.
+* The pipe receives `"john doe"` as `value`.
+* It converts it to `"JOHN DOE"`.
+* Controller method receives `"JOHN DOE"` in the `name` parameter.
+
+## 5. **What is `ArgumentMetadata`?**
+
+This is the second parameter passed into `transform()`:
+
+```ts
+transform(value: any, metadata: ArgumentMetadata)
+```
+
+It contains info about:
+
+* `type`: Where the data comes from (`body`, `query`, `param`, `custom`).
+* `metatype`: The expected type (like `String`, `Number`, or a class).
+* `data`: The parameter name (e.g., `'name'` in `@Body('name')`).
+
+In your pipe, you’re not using `metadata`, but it’s available for more advanced logic.
+
+---
+
+## 6. **How NestJS calls the pipe**
+
+* When a POST request comes to `/myname/custom` with a body:
+
+```json
+{ "name": "john doe" }
+```
+
+* NestJS extracts `name` from body using `@Body('name')`.
+* It sends `"john doe"` through the `UppercasePipe`’s `transform()` method.
+* The pipe returns `"JOHN DOE"`.
+* Controller method parameter `name` becomes `"JOHN DOE"`.
+* Your method returns `{ message: "Received name: JOHN DOE" }`.
+
+---
+
+## Summary Flow:
+
+| Step | Description                                                                    |
+| ---- | ------------------------------------------------------------------------------ |
+| 1    | Request hits `/myname/custom` POST endpoint with JSON `{ "name": "john doe" }` |
+| 2    | NestJS extracts `name` from body using `@Body('name')`                         |
+| 3    | NestJS calls `UppercasePipe.transform('john doe', metadata)`                   |
+| 4    | Pipe converts string to uppercase → returns `"JOHN DOE"`                       |
+| 5    | Controller method receives `"JOHN DOE"` as `name`                              |
+| 6    | Method returns `{ message: "Received name: JOHN DOE" }`                        |
+| 7    | Response sent back to client                                                   |
+
+---
+
+## Bonus: Why use pipes?
+
+* **Validation**: Check and reject invalid inputs.
+* **Transformation**: Convert formats, trim strings, change cases (like your example).
+* **Reusability**: Write once, reuse anywhere by injecting pipes.
+* **Clean controllers**: Keep your controller logic simple.
+
+<!-- 14 -->
