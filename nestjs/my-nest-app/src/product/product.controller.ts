@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 
 @Controller('product')
 export class ProductController {
@@ -7,6 +8,7 @@ export class ProductController {
     constructor(private readonly productService: ProductService ){} // now our services are injected in the controller
 
     @Get()
+    @UseGuards(AuthGuard) // means when there is get request on this product route , then guard will execute first which check if there is token inside authorisation header or not 
     getProducts(){
         return this.productService.getAllProducts();
     }
