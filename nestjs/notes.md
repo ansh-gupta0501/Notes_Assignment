@@ -434,7 +434,7 @@ This will **automatically validate incoming data** and reject bad requests.
 
 
 ---
-# Custom Pipes (for practicall implementation check common folder and myname folder)
+# Custom Pipes (for practical implementation check common folder and myname folder)
 - Pipes are used to transform or validate incoming data. 
 - NestJS allows you to create your own Custom Pipes.
 - They can be used for custom validation, data transformation, or business logic filtering.
@@ -604,4 +604,325 @@ In your pipe, you’re not using `metadata`, but it’s available for more advan
 * **Reusability**: Write once, reuse anywhere by injecting pipes.
 * **Clean controllers**: Keep your controller logic simple.
 
-<!-- 14 -->
+
+### Pipes can be applied at **method level**, **controller level**, or **globally**—giving you flexible control over when and how data is processed.
+
+Let’s break down each level in detail:
+
+---
+
+## ✅ 1. Method-Level Pipes
+
+### 📌 Scope: Applied only to a specific method (route handler)
+
+### 🔧 How it works:
+
+You apply the pipe directly to a route handler parameter or the entire method.
+
+### 🧪 Example:
+
+```ts
+@Get(':id')
+getUserById(@Param('id', ParseIntPipe) id: number) {
+  return this.userService.findById(id);
+}
+```
+
+* `ParseIntPipe` ensures that the `id` parameter is parsed into a number.
+* If `id` is not a valid integer, NestJS throws a `BadRequestException`.
+
+### ✅ When to use:
+
+* You want strict control over how a specific parameter or method input is validated/transformed.
+* Useful for route-level custom behavior.
+
+---
+
+## ✅ 2. Controller-Level Pipes
+
+### 📌 Scope: Applies to all routes in a single controller
+
+### 🔧 How it works:
+
+Use the `@UsePipes()` decorator on the controller class.
+
+### 🧪 Example:
+
+```ts
+@UsePipes(new ValidationPipe())
+@Controller('users')
+export class UsersController {
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
+  }
+
+  @Put(':id')
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto);
+  }
+}
+```
+
+* `ValidationPipe` is applied to all handler methods inside the `UsersController`.
+* Ensures all incoming data for this controller is validated against DTOs.
+
+### ✅ When to use:
+
+* You want consistent validation across all routes in a controller.
+* Avoids repeating `@UsePipes()` on every route method.
+
+---
+
+## ✅ 3. Global-Level Pipes
+
+### 📌 Scope: Applies to **all** routes and controllers in the application.
+
+### 🔧 How it works:
+
+Register global pipes in the main bootstrap file (`main.ts`).
+
+### 🧪 Example:
+
+```ts
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  await app.listen(3000);
+}
+```
+
+* `whitelist: true` strips properties that are not part of the DTO.
+* `transform: true` automatically transforms payloads into DTO class instances.
+
+### ✅ When to use:
+
+* You want a consistent validation/transformation strategy across the entire app.
+* Especially useful for input validation, serialization, and sanitation.
+
+---
+
+## 🔁 Summary Table
+
+| Level          | Scope                       | Use Case                                           | Example Use                         |
+| -------------- | --------------------------- | -------------------------------------------------- | ----------------------------------- |
+| **Method**     | One route handler           | Validate or transform one specific param           | `@Param('id', ParseIntPipe)`        |
+| **Controller** | All methods in a controller | Apply uniform rules to all endpoints in controller | `@UsePipes()` on class              |
+| **Global**     | Entire application          | Consistent input validation across app             | `app.useGlobalPipes()` in `main.ts` |
+
+
+---
+
+# Protecting Routes (for practical implementation check product module and auth folder inside guards folder )
+
+- It means restricting access to specific API routes
+- Only authorized users(like logged in users or admins) can access them.
+- Done by **Guards**
+
+## Guards
+- Guards are classes that implement logic to decide whether a request is allowed or not
+- They implement the CanActivate interface and **run before the route handler**
+- Mostly used for authentication & authorization 
+
+### Why use Guards
+- To sercure private routes
+- To avoid duplicating checks in every controller
+- To build role-based access control systems
+
+- To generate guard use command **nest g guard guards/auth**  // it will create a auth guard directory inside guards folder 
+
+- Default code generated inside guards folder 
+```ts
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Observable } from 'rxjs';
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    return true;
+  }
+}
+
+```
+
+---
+
+### Role based Authorization(for practical implementation check role folder inside guards folder)
+
+- first generate guard **nest g guard guards/roles**
+- make file roles.decorator.ts and roles.enums.ts
+- make controller user-roles
+
+### Reflector
+
+Great question! The `Reflector` class in NestJS is a **powerful utility** for reading metadata set using decorators like `SetMetadata` (e.g. your `@Roles()`).
+
+---
+
+## 🧰 Commonly Used Methods in `Reflector` Class
+
+Here are the most useful and commonly used methods of the `Reflector` class:
+
+| Method                                            | Description                                                                             |                                                    |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `get<T>(metadataKey, target)`                     | Get metadata for a specific target (class or method)                                    |                                                    |
+| \`getAll<T>(metadataKey, targets: Array\<Function | Type<any>>)\`                                                                           | Get metadata from all targets (e.g. method, class) |
+| `getAllAndMerge<T>(metadataKey, targets)`         | Collects metadata from all targets and merges the results into a single array           |                                                    |
+| `getAllAndOverride<T>(metadataKey, targets)`      | Returns the **first defined metadata** found in the list of targets (top-down override) |                                                    |
+
+Let’s go through them one by one:
+
+---
+
+### 1. `get<T>(metadataKey, target)`
+
+🔹 **Get metadata from a single target**
+
+```ts
+const roles = this.reflector.get<Role[]>('roles', context.getHandler());
+```
+
+* Use this if you just want to get metadata from **one target** (method or class).
+* If metadata isn’t present, returns `undefined`.
+
+---
+
+### 2. `getAll<T>(metadataKey, targets)`
+
+🔹 **Get metadata from multiple targets without merging or overriding**
+
+```ts
+const roles = this.reflector.getAll<Role[]>('roles', [
+  context.getHandler(),
+  context.getClass()
+]);
+```
+
+* Returns an array of metadata values (can contain `undefined` if not found).
+* It **doesn’t merge or override** — just collects all values.
+
+Example output:
+
+```ts
+[ ['admin'], ['user'] ]
+```
+
+---
+
+### 3. `getAllAndMerge<T>(metadataKey, targets)`
+
+🔹 **Get and merge all values into a single array**
+
+```ts
+const roles = this.reflector.getAllAndMerge<Role[]>('roles', [
+  context.getHandler(),
+  context.getClass()
+]);
+```
+
+* If handler has `['admin']` and class has `['user']`, you get:
+
+```ts
+['admin', 'user']
+```
+
+* Good for **accumulating all roles** without overriding.
+
+---
+
+### 4. `getAllAndOverride<T>(metadataKey, targets)`
+
+🔹 **Get the first defined metadata value**
+
+```ts
+const roles = this.reflector.getAllAndOverride<Role[]>('roles', [
+  context.getHandler(),
+  context.getClass()
+]);
+```
+
+* If method-level has `['admin']`, it returns that.
+* If not, and class-level has `['user']`, it returns that.
+* Used when **method-level metadata should override** class-level metadata.
+
+---
+
+## 📘 Example Use Case Summary
+
+| Use case                                           | Use this                            |
+| -------------------------------------------------- | ----------------------------------- |
+| You only care about **method** or **class**        | `get()`                             |
+| You want to **see all metadata**, even `undefined` | `getAll()`                          |
+| You want to **merge roles** from method + class    | `getAllAndMerge()`                  |
+| You want **method-level to override class-level**  | `getAllAndOverride()` ✅ (your case) |
+
+---
+
+## 💡 Bonus: When to use which?
+
+| Method                | Behavior                | Ideal When                                      |
+| --------------------- | ----------------------- | ----------------------------------------------- |
+| `get()`               | Simple fetch            | You know exactly where metadata is set          |
+| `getAll()`            | Just collect            | You're inspecting or debugging multiple layers  |
+| `getAllAndMerge()`    | Combine all values      | You want all possible permissions/roles applied |
+| `getAllAndOverride()` | Prioritize method-level | You want specific route-level settings to win   |
+
+---
+
+# Exception Filters (for practical implementation check http-exception.filter inside filters folder and exception.controller.ts)
+
+- Handle Errors and exceptions in a centralized way. 
+- Help in managing app-wide error handling logic cleanly and consistently.
+
+### Where to use
+- Filters can be applied at method-level, controller-level , or gloablly (in main.ts)
+- @Catch() decorator is used to define which exception the filter will handle
+
+### generating custom filter using command **nest g filter filters/http-exception**
+
+
+---
+# Middleware (for practical implementation check logger.middleware.ts inside middlwares folder)
+
+- Middleware runs before the request reaches the controller
+- Flow:- as soon as request is made from the client side to the front end side , then this middlware function gets executed before that request reaches the controller
+
+### Use cases
+- Logging incoming request
+- Authentication tokens(checking jwt)
+- Request transformation(eg. converting string to numbers)
+- Blocking or redirecting requests
+- Setting headers
+
+### Middleware vs Guard
+- Guard is a feature of nest js . It is not used in express js or node js but middleware is a feature of express js
+- We can't use any decorator inside middleware because decorators are part of nest js not express js
+- Role base authorisation done by guards . Using middlware we do above usecases
+
+#### Guard
+- Before route is accessed(based on auth)
+- Authorization (role check, access allowed?)
+
+
+#### Middlware
+- Before controller
+- Common tasks(logging,token decode)
+
+### Genearting middlware using command **nest g middleware middleware/logger**
+### Default code generated in middlware is 
+
+```ts
+import { Injectable, NestMiddleware } from '@nestjs/common';
+
+@Injectable()
+export class LoggerMiddleware implements NestMiddleware {
+  use(req: any, res: any, next: () => void) {
+    next();
+  }
+}
+
+```
+
+- To apply middleware gloablly, go to app.module file and implement the NestModule interface 
