@@ -17,7 +17,6 @@ describe("Post /users",()=>{
         createUser.mockReset()
     }) // reset this function before every single test 
 
-
     describe('given a username and password',()=>{
 
         test("should save the username and password to the database",async()=>{
@@ -38,13 +37,8 @@ describe("Post /users",()=>{
                 expect(createUser.mock.calls[0][1]).toBe(body.password);
 
             }
-           
-     
-    
-
         })
    
-
         test("should respond with a json object containing with user id",async()=>{
            
             for(let i = 0;i<10;i++){
