@@ -926,3 +926,76 @@ export class LoggerMiddleware implements NestMiddleware {
 ```
 
 - To apply middleware gloablly, go to app.module file and implement the NestModule interface 
+
+| Feature            | Middleware                         | Guards                                                  |
+| ------------------ | ---------------------------------- | ------------------------------------------------------- |
+| Purpose            | Request pre-processing             | Authorization / conditional route activation            |
+| Runs before/after  | **Before** route handler           | **Before** route handler, after middleware              |
+| Access to DI?      | Yes (if injectable)                | Yes                                                     |
+| Access to req/res? | Yes                                | Only request and context (no direct access to response) |
+| Can block request? | Yes (by not calling `next()`)      | Yes (by returning `false` or throwing exception)        |
+| Used with          | `apply()` in `configure()`         | `@UseGuards()` decorator on routes or controllers       |
+| Return value       | Nothing (uses `next()` to proceed) | `boolean` or `Promise<boolean>` or throws an exception  |
+
+
+---
+### Why Not Use Middleware for Authorization in NestJS?
+
+- Middleware runs before the NestJS lifecycle:
+- It can't access route metadata (e.g., @Roles() decorator).
+- No access to Dependency Injection unless you use @Injectable() middleware carefully.
+
+- Guards are designed for authorization:
+- Guards can access route metadata, like roles or permissions.
+- They integrate with decorators like @UseGuards() and @Roles().
+
+---
+
+# Lifecycle Events in NestJS / Special Methods In NestJS / Lifecycle Methods/ Hooks
+
+- Lifecycle Events are special methods/hooks provided by NestJS
+- Automatically called at different stages of a module/service/component's life. 
+- Used to perform actions during creation or destruction 
+- We need these methods when any specific event occured 
+- NestJS calls them based on method name, even if interfaces aren't implemented — though using interfaces is recommended.
+
+### Why useful
+- Helps run some code when app/module/service is initialized.
+- Helps run cleanup code when app/module/service is destroyed 
+- Useful for tasks like DB connections, logging,resource cleanup, etc. 
+
+### When are they triggered?
+- onModuleInit() -> Called when the module is initialized -> 	Called once when the provider is initialized within a module
+- onModuleDestroy() -> Called before the module is destroyed -> 	Called just before the provider is destroyed (e.g., during shutdown)
+- afterModuleInit()(optional) -> Called after all modules are initialized
+- onApplicationBootstrap() -> When app is fully bootstrapped -> Called after all modules are initialized and the app is fully bootstrapped
+- OnApplicationShutdown() -> Called when app is shutting down. -> Called before onApplicationShutdown, used for ordered cleanup
+
+### 🔄 Lifecycle Execution Order (Typical)
+App Starts →
+  onModuleInit() (per provider)
+  onApplicationBootstrap() (after all modules/providers initialized)
+
+App Shuts Down →
+  beforeApplicationShutdown(signal)
+  onApplicationShutdown(signal)
+  onModuleDestroy() (per provider)
+
+
+---
+# Environment Variables
+- Environment variables are used to store values that change depending on the environment ( development , production , testing) like database URLs, API keys, secrets, etc. 
+
+### Why to use
+- Secure sensitive info like passwords or API keys
+- Easily switch between dev/staging/prod environments
+- Keep codebase clean and configurable
+
+#### install package **@nestjs/config ** 
+- This package will set the configuration of our environment 
+- configure this in app.module in imports section by **ConfigModule.forRoot({isGlobal: true})**
+
+
+
+
+
