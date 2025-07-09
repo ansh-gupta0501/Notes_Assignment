@@ -17,10 +17,10 @@ export class CustomErrorReporter{
    * VineJS call the report method
    */
   report(
-    message,
-    rule,
-    field,
-    meta
+    message, // The human-readable error message (e.g., "Username is required").
+    rule,   // The name of the rule that failed (e.g., "required", "email").
+    field, // 	An object containing metadata about the field. Most importantly field.wildCardPath – the path to the field, even if nested.
+    meta  // Optional metadata passed to help understand the context of the failure.
   ) {
     this.hasErrors = true
 
