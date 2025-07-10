@@ -25,7 +25,7 @@ class ProfileController {
        try {
          const {id} = req.params
          const authUser = req.user 
- 
+        // console.log("auth user is",authUser)
          if(!req.files || Object.keys(req.files).length === 0){
              return res.status(400).json({message : "profile image is required"})
          }

@@ -42,6 +42,8 @@ class AuthController{
 
     static async login(req,res){
         try {
+            console.log("inside login");
+            
             const body = req.body;
             const validator = vine.compile(loginSchema)
             const payload = await validator.validate(body)
@@ -52,6 +54,8 @@ class AuthController{
                     email : payload.email
                 }
             })
+
+            console.log("findUser",findUser)
 
             if(findUser){
 
