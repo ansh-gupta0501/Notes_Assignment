@@ -7,7 +7,8 @@ import fileUpload from 'express-fileupload'
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
-app.use(fileUpload())
+app.use(fileUpload()) 
+app.use(express.static("public")) 
 
 app.get('/',(req,res)=>{
     return res.json({message: "Hello it is working"})
@@ -19,4 +20,3 @@ app.use('/api',ApiRoutes)
 
 app.listen(PORT,()=>console.log(`server is running on port ${PORT}`))
 
-//1:41

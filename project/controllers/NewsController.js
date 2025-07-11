@@ -3,10 +3,50 @@ import vine from '@vinejs/vine'
 import { errors } from "@vinejs/vine";
 import { generateRandomNumber, imageValidator } from "../utils/helper.js";
 import prisma from "../DB/db.config.js";
+import NewsApiTransform from "../transformer/newsApiTransform.js";
 class NewsController {
     static async index(req,res){
-        const news = await prisma.news.findMany({})
-        return res.json({news})
+        const news = await prisma.news.findMany({
+            include : {
+                user : true
+            }
+        }) // this news will be an array 
+        
+    /*
+        we get news like this 
+
+         
+    "news": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "title": "Breaking news",
+            "content": "nbjbhvghjklkhbjghnvg",
+            "image": "577e940f-bc8d-4fa6-94ec-974b02b7ddbc.png",
+            "created_at": "2025-07-10T10:06:30.670Z",
+            "updated_at": "2025-07-10T10:06:30.670Z"
+        },
+        {
+            "id": 2,
+            "user_id": 1,
+            "title": "Breaking news",
+            "content": "nbjbhvghjklkhbjghnvg",
+            "image": "21b76eb9-51b5-4914-8872-677706854fa0.png",
+            "created_at": "2025-07-10T10:07:22.512Z",
+            "updated_at": "2025-07-10T10:07:22.512Z"
+        }
+    ]
+
+    */
+
+    // need to transform this news so that we get image link and other details 
+        
+        const newsTransform = news?.map((item)=>{
+            return NewsApiTransform.transform(item)
+        })
+        return res.json({news : news}) 
+
+
     }
     
     static async store(req,res){
