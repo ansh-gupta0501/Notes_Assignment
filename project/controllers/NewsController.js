@@ -4,6 +4,10 @@ import { errors } from "@vinejs/vine";
 import { generateRandomNumber, imageValidator, removeImage, uploadImage } from "../utils/helper.js";
 import prisma from "../DB/db.config.js";
 import NewsApiTransform from "../transformer/newsApiTransform.js";
+import logger from "../config/logger.js";
+// import redisCache from "../DB/redis.config.js";
+
+
 class NewsController {
     static async index(req,res){
 
@@ -109,10 +113,22 @@ class NewsController {
         const news = await prisma.news.create({
             data : payload
         })
+
+        // remove cache  
+        // we did so because whenever new news is created, we need to remove the cache so that next time when we fetch news, it will be fetched from database and not from cache
+        // if we don't do this then we will always get the old news from cache and not the new news that we just created
+
+        // redisCache.del("/api/news/",(err)=>{
+        //     if(err) {
+        //         // console.error("Error deleting cache:", err);
+        //         throw new Error("Error deleting cache")
+        //     }
+        // }) // need to write the key, don't write prefix , 
+
          return res.status(200).json({message : " News created successfuly ",news})
  
        } catch (error) {
-
+        logger.error(error)
         if(error instanceof errors.E_VALIDATION_ERROR){
 
             // console.log(error.messages)
@@ -163,6 +179,9 @@ class NewsController {
              }
          })
  
+        //  console.log("user.id is ",user.id)
+        //  console.log("news.user_id is ",news.user_id)
+
          if(user.id !== news.user_id){
              return res.status(400).json({message : "Unauthorized"})
          }
@@ -216,7 +235,33 @@ class NewsController {
        }
     }
     static async destroy(req,res){
-        
+        try {
+            const {id} = req.params
+            const user = req.user
+            const news = await prisma.news.findUnique({
+                where : {
+                    id : Number(id)
+                }
+            })
+    
+            if(user.id !== news.user_id){
+                return res.status(400).json({message : "Unauthorized"})
+            }
+    
+            //delete image from file sytem 
+            removeImage(news.image)
+    
+            await prisma.news.delete({
+                where : {
+                    id : Number(id)
+                }
+            })
+
+            return res.status(200).json({message : "News deleted successfuly"})
+
+        } catch (error) {
+             return res.status(500).json({message: "Something went wrong.Please try again "})
+        }
     }
 }
 

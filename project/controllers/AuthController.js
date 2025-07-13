@@ -3,6 +3,8 @@ import vine,{errors} from '@vinejs/vine'
 import { registerSchema,loginSchema } from '../validations/authValidation.js';
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { sendEmail } from '../config/mailer.js';
+import logger from '../config/logger.js';
 class AuthController{
     static async register(req,res){
         try {
@@ -97,6 +99,27 @@ class AuthController{
         }
     }
 
+
+    // send test email 
+    static async sentTestEmail(req,res){
+        try {
+            const {email} = req.query
+
+            const payload = {
+                toEmail: email,
+                subject: "Hey i am just testing",
+                body : "<h1>Hello bro how are you  </h1>",
+                body1 : "<h1>Hello World , second email. </h1>"
+            }
+
+            await sendEmail(payload.toEmail,payload.subject,payload.body)
+            // await sendEmail(payload.toEmail,'second email',payload.body1)
+            return res.status(200).json({message: "Email sent successfully"})
+        } catch (error) {
+            logger.error({type : "Email Error",body : error});
+            return res.status(500).json({message: "Something went wrong while sending email"})
+        }
+    }
 }
 
 export default AuthController
