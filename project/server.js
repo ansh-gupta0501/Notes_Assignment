@@ -39,5 +39,10 @@ app.use('/api',ApiRoutes)
 // logger.info("Hey I am just testing... ")
 // logger.error("Hey I am just testing error... ")
 
+
+// jobs import 
+
+import './jobs/index.js'
+
 app.listen(PORT,()=>console.log(`server is running on port ${PORT}`))
 
