@@ -59,6 +59,29 @@ const http = require('node:http')
 
 // ---
 
+// sending json response 
+
+// const server = http.createServer((req,res)=>{
+
+//     const superHero = {
+//         firstName : 'Bruce',
+//         lastName : "Wayne"
+//     }
+
+//     res.writeHead(200, {"content-type" : "application/json"})   
+   
+  
+//     res.end(JSON.stringify(superHero))
+
+// })
+
+
+
+
+// ---
+
+// sending html response 
+const fs = require('node:fs')
 const server = http.createServer((req,res)=>{
 
     const superHero = {
@@ -66,10 +89,38 @@ const server = http.createServer((req,res)=>{
         lastName : "Wayne"
     }
 
-    res.writeHead(200, {"content-type" : "application/json"})   
+    // res.writeHead(200, {"content-type" : "text/html"})   
    
   
-    res.end(JSON.stringify(superHero))
+    // res.end('<h1>Hlo World</h1>')
+    // Here we directly send html code in res which is not good practice 
+    
+//      -------
+    // using file read 
+
+//     res.writeHead(200, {"content-type" : "text/html"})   
+//    const html = fs.readFileSync('./index.html','utf-8')
+//   console.log(html); // another problem it reads entire file at once , which can fill the buffer for larger files so we should use streams 
+  
+//     res.end(html)
+
+
+// -----
+
+// using streams 
+
+//  res.writeHead(200, {"content-type" : "text/html"})   
+// fs.createReadStream('./index.html').pipe(res)
+
+  // now this is good for static pages but if we have dynamic html pages , then need for anothe way using string replacement 
+
+//   ---
+// string replacement 
+    const name = 'Vishwas '
+    res.writeHead(200, {"content-type" : "text/html"})  
+    let html = fs.readFileSync('./index.html','utf-8')
+    html = html.replace("{{name}}",name)
+    res.end(html)
 
 })
 
