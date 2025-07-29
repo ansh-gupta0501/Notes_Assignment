@@ -169,32 +169,32 @@ This is setTimeOut 3
 
 
 // ---------
-setTimeout(()=>console.log('This is setTimeOut 1'),0)
-setTimeout(()=>{
-    console.log('This is setTimeOut 2')
-    process.nextTick(()=>{
-        console.log('This is inner nextTick inside setTimeout 2')
-    })
-},0)
-setTimeout(()=>console.log('This is setTimeOut 3'),0)
+// setTimeout(()=>console.log('This is setTimeOut 1'),0)
+// setTimeout(()=>{
+//     console.log('This is setTimeOut 2')
+//     process.nextTick(()=>{
+//         console.log('This is inner nextTick inside setTimeout 2')
+//     })
+// },0)
+// setTimeout(()=>console.log('This is setTimeOut 3'),0)
 
-process.nextTick(()=>{console.log('THis is the process.nextTick 1')})
-process.nextTick(()=>{
-    console.log('THis is the process.nextTick 2')
-    process.nextTick(()=>{
-        console.log('This is inner nextTick inside next Tick 2')
-    })
-})
-process.nextTick(()=>{console.log('THis is the process.nextTick 3')})
+// process.nextTick(()=>{console.log('THis is the process.nextTick 1')})
+// process.nextTick(()=>{
+//     console.log('THis is the process.nextTick 2')
+//     process.nextTick(()=>{
+//         console.log('This is inner nextTick inside next Tick 2')
+//     })
+// })
+// process.nextTick(()=>{console.log('THis is the process.nextTick 3')})
 
-Promise.resolve().then(()=>{console.log('This is promise.resolve 1')})
-Promise.resolve().then(()=>{
-    console.log('This is promise.resolve 2')
-     process.nextTick(()=>{
-        console.log('This is inner nextTick inside promise.resolve 2')
-    })
-})
-Promise.resolve().then(()=>{console.log('This is promise.resolve 3')})
+// Promise.resolve().then(()=>{console.log('This is promise.resolve 1')})
+// Promise.resolve().then(()=>{
+//     console.log('This is promise.resolve 2')
+//      process.nextTick(()=>{
+//         console.log('This is inner nextTick inside promise.resolve 2')
+//     })
+// })
+// Promise.resolve().then(()=>{console.log('This is promise.resolve 3')})
 
 /*
 output :- 
@@ -213,4 +213,281 @@ This is setTimeOut 3
 */
 
 // because callbacks in microtask queues are executed in between the executin of callbacks in the timer queue
+
+
+
+// -------------------------------
+
+// I/O polling 
+
+// - Most of the async methods from the build-in modules queue the callback function in the I/O queue 
+
+// fs.readFile()
+
+// const fs = require('fs')
+
+// fs.readFile(__filename,()=>{
+//     console.log('this is readFile 1');
+    
+// })
+
+
+// process.nextTick(()=>{console.log('THis is the process.nextTick 1')})
+// Promise.resolve().then(()=>{console.log('This is promise.resolve 1')})
+
+/*
+output:-
+THis is the process.nextTick 1
+This is promise.resolve 1
+this is readFile 1
+*/
+//because callbacks in the microtask queue are executed before callbacks in the I/O queue
+
+// ----
+
+// const fs = require('fs')
+
+// setTimeout(()=>{
+//     console.log('setTimeout 1');
+    
+// },0)
+
+// fs.readFile(__filename,()=>{
+//     console.log('this is readFile 1');
+    
+// })
+
+/*
+when running this code we get inconsistent result as sometimes we get 
+setTimeout 1
+this is readFile 1
+but sometimes we get 
+this is readFile 1
+setTimeout 1
+*/
+// because when running setTimeout with delay 0ms and an I/O async method,, the order of execution can never be guaranteed 
+
+
+
+// -------------------------
+// const fs = require('fs')
+
+// fs.readFile(__filename,()=>{
+//     console.log('this is readFile 1');
+    
+// })
+// process.nextTick(()=>{console.log('THis is the process.nextTick 1')})
+// Promise.resolve().then(()=>{console.log('This is promise.resolve 1')})
+// setTimeout(()=>{
+//     console.log('setTimeout 1');
+    
+// },0)
+
+// for(let i = 0;i<2000000000;i++){} // to avoid above inconsistency for setTimeout
+/*
+THis is the process.nextTick 1
+This is promise.resolve 1
+setTimeout 1
+this is readFile 1
+
+*/
+
+// ----
+
+// check queue 
+// to queue a callback function into the check queue , we can use a function called setImmediate 
+
+
+// const fs = require('fs')
+
+// fs.readFile(__filename,()=>{
+//     console.log('this is readFile 1');
+    
+// })
+// process.nextTick(()=>{console.log('THis is the process.nextTick 1')})
+// Promise.resolve().then(()=>{console.log('This is promise.resolve 1')})
+// setTimeout(()=>{
+//     console.log('setTimeout 1');
+    
+// },1500)
+
+// setImmediate(()=>{console.log('this is the setImmediate 1')})
+
+// for(let i = 0;i<2000000000;i++){}
+
+/*
+output:-
+THis is the process.nextTick 1
+This is promise.resolve 1
+setTimeout 1
+this is the setImmediate 1
+this is readFile 1
+*/
+//setImeediate 1 before readFile 1 because of I/O POLLING between I/O queue and check queue
+// I/O events are polled and callback functions are added to the I/O queue only after the I/O is complete 
+
+// I/O POLLING
+// I/O Polling is part of the Poll Phase of the Node.js event loop. It’s the mechanism by which Node.js waits for I/O operations (like file reads, network requests, etc.) to complete.
+//  Two Scenarios in the Poll Phase
+// ✅ Scenario 1: There are I/O callbacks ready
+// Node.js executes them immediately.
+// Then moves to the Check Phase (where setImmediate() runs).
+// 🕓 Scenario 2: No I/O callbacks are ready
+// Node.js waits (polls) for I/O events to complete.
+// If a timer (like setTimeout) is due while polling, it ends polling early and moves to the Timers Phase.
+
+// --------------------------------------
+
+// const fs = require('fs')
+
+// fs.readFile(__filename,()=>{
+//     console.log('this is readFile 1');
+
+//     setImmediate(()=>{console.log('this is the inner setImmediate 1 inside readFile ')}) // to ensure that this setimmediate queued up only after I/O polling completes 
+    
+// })
+// process.nextTick(()=>{console.log('THis is the process.nextTick 1')})
+// Promise.resolve().then(()=>{console.log('This is promise.resolve 1')})
+// setTimeout(()=>{
+//     console.log('setTimeout 1');
+    
+// },0)
+
+
+
+// for(let i = 0;i<2000000000;i++){}
+
+/*
+output
+
+THis is the process.nextTick 1
+This is promise.resolve 1
+setTimeout 1
+this is readFile 1
+this is the inner setImmediate 1 inside readFile
+*/
+
+
+// ----
+
+
+// const fs = require('fs')
+
+// fs.readFile(__filename,()=>{
+//     console.log('this is readFile 1');
+
+//     setImmediate(()=>{console.log('this is the inner setImmediate 1 inside readFile ')}) // to ensure that this setimmediate queued up only after I/O polling completes 
+    
+//     process.nextTick(()=>{console.log('THis is the inner process.nextTick 1')})
+//     Promise.resolve().then(()=>{console.log('This is inner promise.resolve 1')})
+// })
+
+
+// process.nextTick(()=>{console.log('THis is the process.nextTick 1')})
+// Promise.resolve().then(()=>{console.log('This is promise.resolve 1')})
+
+// setTimeout(()=>{
+//     console.log('setTimeout 1');
+    
+// },0)
+
+
+
+// for(let i = 0;i<2000000000;i++){}
+
+/*
+THis is the process.nextTick 1
+This is promise.resolve 1
+setTimeout 1
+this is readFile 1
+THis is the inner process.nextTick 1
+This is inner promise.resolve 1
+this is the inner setImmediate 1 inside readFile 
+*/
+
+
+// -----
+
+// setImmediate(()=>console.log('this is setImmediate 1'))
+// setImmediate(()=>{
+//     console.log('this is setImeediate 2');
+//     process.nextTick(()=>{console.log('THis is the process.nextTick 1')})
+//     Promise.resolve().then(()=>{console.log('This is promise.resolve 1')})
+    
+// })
+// setImmediate(()=>console.log('this is setImmediate 3'))
+
+/*
+output
+this is setImmediate 1
+this is setImeediate 2
+THis is the process.nextTick 1
+This is promise.resolve 1
+this is setImmediate 3
+*/
+
+
+// setTimeout(()=> console.log('settimeout 1'),0)
+// setImmediate(()=>console.log('this is setImmediate 1'))
+
+/*
+this is setImmediate 1
+settimeout 1
+
+or 
+
+settimeout 1
+this is setImmediate 1
+*/
+
+// order can't be gurannteed 
+
+
+// ---------------------------------------------------------
+
+//close queue 
+
+// const fs = require('fs')
+// const readableStream = fs.createReadStream(__filename)
+// readableStream.close()
+
+// readableStream.on('close',()=>{
+//     console.log('this is from readable stream close event callback ');
+    
+// })
+
+// setImmediate(()=>{console.log('this is setImmediate 1')})
+// setTimeout(()=> console.log('settimeout 1'),0)
+// Promise.resolve().then(()=>{console.log('This is promise.resolve 1')})
+// process.nextTick(()=>{console.log('This is the process.nextTick 1')})
+
+/*
+output
+This is the process.nextTick 1
+This is promise.resolve 1
+settimeout 1
+this is setImmediate 1
+this is from readable stream close event callbac
+*/
+//because close queue callbacks are executed after all other queues calbacks in a given iteration of the event loop 
+
+
+
+
+// -------------------------
+// summary for event loop 
+
+// - The event loop is a c program that orchestrates or co-ordinates the execution of synchronous and asynchronous code in node js 
+// - it co-ordinates the execution of calbacks in six differnet queues 
+// - they are nextTick , promise, timer ,I/O , check and close queues 
+
+// We use process.nextTick() method to queue into the nextTick queue
+// We resolve or reject a promise to queue into the promise queue 
+// We use setTimeout or setInterval to queue into the timer queue 
+// Execute an async method to queue into the I/O queue 
+// Use setImmediate function to queue into the check queue 
+// Attack close event listeners to queue into the close queue
+
+// the order of execution follows the same order lister here 
+// nextTick and promise queue are executed in between each queue and also in between each callback execution in the timer and check queues
 

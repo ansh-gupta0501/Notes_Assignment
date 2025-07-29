@@ -1,0 +1,14 @@
+{
+  "name": "my-custom-package",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "upper-case": "^2.0.2"
+  }
+}
