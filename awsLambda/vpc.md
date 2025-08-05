@@ -101,3 +101,4 @@ Think of AWS like a large office building:
 ### NAT (Network address translation ) gateway 
 - we created a private instance inside private subnet and you had to set up database on it. NOw we don't want to allow internet to database directly but database have to do some functions internally like updgrade a version or update itself so he need to download some files means he can accepts request from instance to outside but not from outside to instance . means for one way communication we use nat
 - so he will connect through internet gateway with the help of nat gateway
+
