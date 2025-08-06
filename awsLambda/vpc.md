@@ -1,7 +1,4 @@
-- to create a private network over aws. as suppose if there are 10 users who create ec2 instance so all users use  a shared network , but if we have our private network , we will have more control over it as we manage it privately ourselves. Secondly , we isolated from their default network. 
-
-
-Excellent line of thinking, Ansh! Let's break down and explain your statement in detail:
+- To create a private network over aws. As suppose if there are 10 users who create ec2 instance so all users use  a shared network environment , but if we have our private network , we will have more control over it as we manage it privately ourselves. Secondly , we isolated from their default network. 
 
 ---
 
