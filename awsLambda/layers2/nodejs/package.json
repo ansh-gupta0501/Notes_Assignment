@@ -1,0 +1,5 @@
+{
+  "name": "reusablefunction",
+  "type": "module",
+  "main": "reusablefunction.mjs"
+}
