@@ -77,8 +77,7 @@ Think of AWS like a large office building:
 - Route table is associated with subnet so we define rules in route table like if data is coming from public subnet from any zone then forward it to internet gateway .But if data is coming from private subnet then forward it to vpc endpoint.
 
 - Now there is default vpc formed by aws in which we have default main route table. in that table there is rule set 0.0.0.0/0 which means to forward all subnets inside this vpc and all data inside this to internet gateway . 
-
-
+r
 ### Internet Gateway 
 - you created subnets, put resources in it. So how will your resources be easily accessibly from the internet? This is done by internet gateway 
 - in the diagram , we see that we attach internet gateway with our vpc and this internet gateway is accessible and connected to the outer world meaning internet.
