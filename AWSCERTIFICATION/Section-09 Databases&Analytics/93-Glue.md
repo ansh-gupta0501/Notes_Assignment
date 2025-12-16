@@ -19,4 +19,6 @@ Amazon RDS -------------------|
 
 ## Glue Data Catalog
 - It is a catalog of your datasets in your AWS infrastructure and so this Glue Data Catalog will have a alert reference of everything , the column names, the field names, the field types etc. 
-- This can be used by services such as Athena, Redshift and EMR to discover the datasets and build the proper schemas for them. 
+- This can be used by services such as Athena, Redshift and EMR to discover the datasets and build the proper schemas for them.
+
+
