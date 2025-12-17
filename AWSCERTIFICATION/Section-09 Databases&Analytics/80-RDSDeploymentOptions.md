@@ -10,7 +10,7 @@
         - When it comes to writing data, it is only done to main database. So your application still have to write to the only one central RDS database. 
         - Imagine you have a e-commerce site, Your app directs browsing traffic to replicas, while checkout traffic still goes to the main DB
     - **Multi-AZ :**
-    This is helpful when you have failover in case of an AZ outage. So like crashes in the AZ . So this gives you high availabily. For example, your application still read and write from same main RDS database. But we are going to set up a replication across AZ so in a different availability zone and this is going to be a failover database. In case the main RDS database crashes for whatever reason then RDS will trigger a failover. And then your application will failover to failover database in different AZ.
+    This is helpful when you have failover in case of an AZ outage. So like crashes in the AZ . So this gives you high availabily. For example, your application still read and write from same main RDS database. But we are going to set up a replication across AZ so in a different availability zone and this is going     to be a failover database. In case the main RDS database crashes for whatever reason then RDS will trigger a failover. And then your application will failover to failover database in different AZ.
         - In this case, data is only read and written to the main database.
         - The failover DB is passive. It's not accessible until there is an issue with the main database.
         - You can only have one other AZ as a failover AZ
