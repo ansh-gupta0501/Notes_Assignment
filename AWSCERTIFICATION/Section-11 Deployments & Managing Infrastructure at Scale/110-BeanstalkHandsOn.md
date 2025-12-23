@@ -72,6 +72,7 @@ and my single EC2 instance
 - If we go under MyApplication , we have one environment MyApplication-dev, we can also create a second environment like MyApplication-prod and that will allow us to really think about environments overall.
 
 ---
+# AI Explanation
 ---
 
 # Elastic Beanstalk web app setup and architecture
