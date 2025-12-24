@@ -23,7 +23,7 @@
         - Custom configuration
 - Click next 
 - Now you have to **configure the service access**
-    - **IAM roles**, assumed by Elastic Beanstalk as a service role, and **EC2 instance profiles** allow Elastic Beanstalk to create and manage your environment. Both the IAM role and instance profile must be attached to **IAM managed policies** that contain the required permissions
+    - **IAM roles**, assumed by Elastic Beanstalk itself as a service role, and **EC2 instance profiles** allow Elastic Beanstalk to create and manage your environment. Both the IAM role and instance profile must be attached to **IAM managed policies** that contain the required permissions
         - So first need to create a **service role** which is an IAM role for Elastic Beanstalk to assume as a service role. The IAM role must have the required IAM managed policies.
             - So create role , it is for AWS service . and for Beanstalk Environment . 
             - click next 
@@ -35,7 +35,7 @@
             - Click next
             - Role name is given **aws-elasticbeanstalk-service-role**
             - Create role
-        - Next, for **EC2 Instance Profile** , this is the same thing, we are going to create a role , this time for beanstalk compute , having these permissions
+        - Next, for **EC2 Instance Profile**, An IAM role attached to the EC2 instances that run your application , this is the same thing, we are going to create a role , this time for beanstalk compute , having these permissions
             ```
             AWSElasticBeanstalkMulticontainerDocker
             AWSElasticBeanstalkWebTier
@@ -257,11 +257,4 @@ Elastic Beanstalk needs permission to create and manage resources on your behalf
 - **Cost control:** Use tags, budgets, and consider spot capacity only in non-critical tiers with on-demand fallback.
 
 ---
-
-## Next steps
-
-- **Dev to prod promotion:** Clone your dev environment to a prod environment with HA preset and an ALB.  
-- **Custom domain:** Point your domain (e.g., via Route 53) to the EB environment CNAME or the ALB (HA).  
-- **CI/CD:** Automate “Upload and deploy” with CodePipeline + CodeBuild or GitHub Actions.  
-- **Health and rollback:** Configure deployment policies and health checks to auto-rollback on new version failures.
 
