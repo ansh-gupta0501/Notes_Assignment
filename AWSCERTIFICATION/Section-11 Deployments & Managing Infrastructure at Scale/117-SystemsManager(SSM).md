@@ -1,13 +1,16 @@
 # AWS Systems Manager (SSM)
 
-- SSM helps you manage your fleet of **EC2 Instances** and **On-Premises** systems at scale. 
+- SSM helps you manage your fleet of **EC2 Instances** and **On-Premises** systems at scale without SSH or RDP. 
 - It is a way to manage your both **On-Premises** and **AWS**. So, therefore, it is called a **Hybrid AWS service**
 - SSM allows you to do a ton of things that is quite complicated, but the idea is that its a Systems Manager so you can get **Operational Insights** about the state of your **infrastructure**. 
 - You also get access to a suite of 10+ products.
 - Most important products and features are 
-    - You can do automotive patching of all your servers and instances for enhanced compilance.
+    - You can do automotive patching (applying operating system updates (security fixes, bug fixes, improvements)) of all your servers and instances for enhanced compilance
+        - Automated patching lets you schedule and apply patches across all EC2 instances and on‑prem servers without logging into each one manually.
     - You can also run a command across your entire fleet of server directly from SSM 
+        - Run Command lets you execute shell scripts, PowerShell commands, or predefined SSM documents across multiple servers at once.You don’t need SSH or RDP access — the SSM agent handles it securely.
     - You can store primary configuration with the SSM Parameter Store.
+        - A secure, centralized key‑value store for configuration data and secrets.Examples: database connection strings, API keys, environment variables.
 - Finally, SSM works for Linux, Windows, MacOS, and Raspberry Pi OS (Raspbian)
 
 #### From exam perspective, anytime you see a way to patch your fleet of EC2 Instances or On-Premises servers you have to think about SSM or if you wanted to run a command consistently across all your servers , SSM would be the right way.
