@@ -63,3 +63,95 @@
 - If we specify path like /coffee.jpg, we will see the image. Similarly type /beach.jpg and /index.html , we will see the files
 - This is accessed through cloudfront and then cloudfront is going to access my s3 bucket. But remember my elements in my s3 bucket are still private
 - Benefit is that , next time if we open image though this cloudfront domain , it will be instantly loaded because we have cached version . So it is same fast/very little latency even if we access this page from other regions 
+
+
+---
+
+
+## 📦 Static Content (best fit for CloudFront)
+- Examples: images, CSS, JavaScript, videos, downloads.  
+- Why it works well:  
+  - These files don’t change often.  
+  - CloudFront caches them at edge locations worldwide.  
+  - Users get super-fast delivery because the file is already stored near them.  
+- Industry practice:  
+  - Long cache times (hours or days).  
+  - Versioned filenames (e.g., `app.v2.js`) so you don’t need to invalidate caches when you update.
+
+---
+
+## ⚡ Dynamic Content (also supported)
+- Examples: APIs, personalized pages, search results.  
+- CloudFront can still help here:  
+  - You can configure **short cache times** or even **no cache**.  
+  - CloudFront still provides benefits like **global TLS termination, DDoS protection, WAF filtering, and optimized routing** over AWS’s backbone network.  
+- Industry practice:  
+  - Cache static parts (images, scripts).  
+  - Forward dynamic requests to the origin (EC2, ALB, API Gateway).  
+  - Use cache policies to control what gets cached and what doesn’t.
+
+---
+
+## 🔑 Key Point
+- **Static content** → CloudFront caches aggressively, huge performance boost.  
+- **Dynamic content** → CloudFront still helps, but caching is limited. The main value is security, global distribution, and optimized routing.  
+
+---
+
+## ✅ Summary
+CloudFront is **best for static content** that doesn’t change often, but it’s also widely used for **dynamic content delivery** (like APIs or personalized sites). The trick is in how you configure caching rules and policies.
+
+---
+## 🔒 Global TLS Termination
+- **TLS (Transport Layer Security):** The encryption protocol behind HTTPS. It ensures data between your browser and the server is secure.  
+- **Termination at the edge:** With CloudFront, the HTTPS connection is established at the nearest **edge location** to the user.  
+- **Benefit:**  
+  - Users don’t have to connect all the way to your origin (say, an S3 bucket in Australia).  
+  - The secure handshake happens locally (e.g., Los Angeles edge), making it faster.  
+  - CloudFront then forwards the request securely to your origin over AWS’s private backbone.  
+- **Industry standard:** This is called **SSL/TLS offloading** — it reduces latency and origin load.
+
+---
+
+## 🛡️ DDoS Protection
+- **DDoS (Distributed Denial of Service):** Attackers flood your servers with massive traffic to overwhelm them.  
+- **CloudFront defense:**  
+  - Because CloudFront sits in front of your origin, the attack traffic hits CloudFront’s global edge network first.  
+  - AWS Shield (built-in) absorbs and mitigates these floods at scale.  
+  - Your origin never sees the full attack volume.  
+- **Industry standard:** Enterprises use CDNs like CloudFront or Akamai as a “buffer” against DDoS.
+
+---
+
+## 🚧 WAF Filtering (Web Application Firewall)
+- **WAF:** A firewall that inspects HTTP requests at the application layer.  
+- **CloudFront integration:** You can attach AWS WAF rules to your CloudFront distribution.  
+- **What it does:**  
+  - Blocks malicious requests (SQL injection, cross-site scripting, bad bots).  
+  - Filters traffic by IP, country, or request patterns.  
+  - Rate-limits abusive clients.  
+- **Benefit:** Attacks are stopped at the edge before they ever reach your origin servers.
+
+---
+
+## 🌍 Optimized Routing over AWS’s Backbone
+- **AWS backbone network:** A private, high-speed global network connecting AWS regions and edge locations.  
+- **How CloudFront uses it:**  
+  - When an edge location needs to fetch content from your origin, it doesn’t use the public internet.  
+  - It travels over AWS’s optimized private routes.  
+- **Benefit:**  
+  - Lower latency, fewer hops, more reliability.  
+  - Avoids congestion and packet loss common on the public internet.  
+- **Industry standard:** This is called **Anycast routing + private backbone acceleration** — it’s why CDNs deliver content faster and more reliably worldwide.
+
+---
+
+## ✅ Putting It All Together
+When a user requests your content:
+1. **TLS termination** happens at the nearest edge → fast and secure.  
+2. **DDoS protection** absorbs floods at the edge → origin stays safe.  
+3. **WAF filtering** blocks malicious traffic → only clean requests pass through.  
+4. **Optimized routing** carries requests/responses over AWS’s private backbone → faster global delivery.  
+
+👉 CloudFront isn’t just about caching static files — it’s also a **security shield and performance accelerator** for both static and dynamic content.
+
