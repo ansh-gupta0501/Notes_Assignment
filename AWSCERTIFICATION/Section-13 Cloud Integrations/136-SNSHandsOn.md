@@ -1,0 +1,55 @@
+- Go to SNS Console
+- Create a topic called **demo-SNS**
+    - We also have two options in this standard and first in first out
+        - FIFO (first-in, first-out) :
+            - Strictly-preserved message ordering
+            - Exactly-once message delivery
+            - Subscription protocols: SQS
+        - Standard
+            - Best-effort message ordering
+            - At-least once message delivery
+            - Subscription protocols: SQS, Lambda, Data Firehose, HTTP, SMS, email, mobile application endpoints
+- Now there is option **display name** which is optional and it is used when To use the topic with SMS subscriptions, enter a display name. Only the first 10 characters are displayed in an SMS message.
+
+- There are many other options  which are optional
+    - Encryption - disabled by default
+    - Access policy - same as sqs
+    - Data protection policy - This policy defines which sensitive data to monitor and to prevent from being exchanged via your topic.
+    - Delivery policy - The policy defines how Amazon SNS retries failed deliveries to HTTP/S endpoints
+    - Message delivery status logging
+- Leave everything default and create topic 
+- Now we want to send messages to this SNS topic and we want subscribers to this topic to recieve the messages
+- So create a subscription 
+    - Select your topic
+    - Select protocol : The type of endpoint to subscribe
+        - Kinesis
+        - SQS
+        - Lambda
+        - email
+        - email-json
+        - http
+        - https
+        - sms
+        - platform application endpoint
+    - Choose email
+    - In endpoint , write your email
+        - you can write like anshgupta@mailinator.com, it is a temporary mail box 
+    - Other things **subscription filter policy** which is optional
+        - This policy filters the messages that a subscriber receives.
+        - Subscribers can filter messages by attributes.
+        - Example: Only receive messages where eventType = "OrderPlaced".
+    - next is **Redrive policy (dead-letter queue) - optional**
+        - Send undeliverable messages to a dead-letter queue. 
+
+- Now in the topic , under subscription , we see pending confirmation 
+    - To confirm this , just click on link you recieved from aws
+- You could have many subsbcribers for your sns topic
+- Now to send a message to sns topic , go to publish message 
+    - Enter subject **Demo Subject** which is optional
+    - Then there is **message group id** - An optional token for SQS fair queue usage. Propagated only to standard SQS queue subscriptions.
+    - Then there is **Time to Live (TTL)** - optional - This setting applies only to mobile application endpoints. The number of seconds that the push notification service has to deliver the message to the endpoint.
+    - Now in **message body** , write payload, **hello world**
+    - Now there is **message attribute** - Message attributes let you provide structured metadata items (such as timestamps, geospatial data, signatures, and identifiers) for the message.
+
+- Now message published successfuly, so all the subscribers in my subscriptions should recive that message. 
+- Check you mail , you got a mail from aws which says hello world
