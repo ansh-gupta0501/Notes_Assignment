@@ -21,27 +21,27 @@ The protocols (AMQP, MQTT, STOMP, OpenWire, WebSockets) are **standard ways for 
 
 ## 🟢 Messaging Protocols (simple explanation)
 
-- **[AMQP](guide://action?prefill=Tell%20me%20more%20about%3A%20AMQP)** (Advanced Message Queuing Protocol)  
+- **AMQP** (Advanced Message Queuing Protocol)  
   - A widely used standard for enterprise messaging.  
   - Supports features like acknowledgments, routing, and transactions.  
   - Example: A banking app sends payment requests via AMQP to ensure reliable delivery.
 
-- **[MQTT](guide://action?prefill=Tell%20me%20more%20about%3A%20MQTT)** (Message Queuing Telemetry Transport)  
+- **MQTT** (Message Queuing Telemetry Transport)  
   - Lightweight pub/sub protocol, designed for IoT devices.  
   - Very efficient, works well over low‑bandwidth connections.  
   - Example: Smart home sensors publish temperature readings via MQTT.
 
-- **[STOMP](guide://action?prefill=Tell%20me%20more%20about%3A%20STOMP)** (Simple Text Oriented Messaging Protocol)  
+- **STOMP** (Simple Text Oriented Messaging Protocol)  
   - Human‑readable, text‑based protocol.  
   - Easy to integrate across different programming languages.  
   - Example: A chat application uses STOMP over WebSockets to deliver messages.
 
-- **[OpenWire](guide://action?prefill=Tell%20me%20more%20about%3A%20OpenWire)**  
+- **OpenWire**  
   - Native protocol for ActiveMQ.  
   - Optimized for Java Message Service (JMS) applications.  
   - Example: Legacy enterprise apps using JMS connect to ActiveMQ via OpenWire.
 
-- **[WebSockets (WSS)](guide://action?prefill=Tell%20me%20more%20about%3A%20WebSockets%20(WSS))**  
+- **WebSockets (WSS)**  
   - A protocol for two‑way communication over a single TCP connection.  
   - Often used with STOMP or MQTT for browser‑based apps.  
   - Example: A stock trading dashboard updates prices in real time via WebSockets.
