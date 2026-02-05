@@ -1,5 +1,0 @@
-# DynamoDB - Global Tables
-
-- It's a way for you to make DynamoDB table accessible with low latency and this is the key in multiple regions. 
-- Example, we have our DynamoDB table in **us-east-one** and we'll set up as a **global table**. So our users can do read and write to this DynamoDB table in us-east-one. But it is possible for us to set up some replication for this global table. So we can create a global table in Paris **eu-west-3** and we'll say they're the same so there's two way replication between these tables. That means that the same data is in us-east-1 and in eu-west-3 but users who are close to the Paris region can access this global table with low latency in Paris. So this is true for one to 10 regions, if you want it to. A global table is really global that users can read/write to the table in any specific region. There will just be replication between these two .
-- So the fact that there is read/write access to any region of AWS on this global table, makes it an **active-active replication** because you can actively write to any region and it will actively be replicated into other regions. 
